@@ -1,17 +1,11 @@
-"use client";
+'use client';
 
-import HorizentalWizard from "@/components/partials/froms/HorizentalWizard";
-import Vertical from "@/components/partials/froms/Vertical";
+import HorizentalWizard from '@/components/partials/froms/HorizentalWizard';
 
 const FormWizard = () => {
   return (
-    <div className=" space-y-5">
-      <div>
-        <Vertical />
-      </div>
-      <div>
-        <HorizentalWizard />
-      </div>
+    <div>
+      <HorizentalWizard />
     </div>
   );
 };

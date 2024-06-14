@@ -32,7 +32,6 @@ const LoginForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      console.log('Login form data:', data); // Logging form data
       await login(data.email, data.password);
       toast.success('Login successful!', {
         position: 'top-right',
@@ -44,9 +43,6 @@ const LoginForm = () => {
         progress: undefined,
         theme: 'light',
       });
-      setTimeout(() => {
-        router.push('/profile');
-      }, 500);
     } catch (error) {
       console.error('Login submission error:', error); // Logging error
       toast.error('Invalid credentials', {

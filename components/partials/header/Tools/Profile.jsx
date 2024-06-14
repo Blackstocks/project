@@ -46,7 +46,7 @@ const Profile = () => {
       icon: 'heroicons-outline:login',
       action: async () => {
         await logout();
-        router.push('/login'); // Redirect to login page after logout
+        router.push('/');
       },
     },
   ];

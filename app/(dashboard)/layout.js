@@ -25,6 +25,9 @@ import Loading from '@/components/Loading';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import useNavbarType from '@/hooks/useNavbarType';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/lib/supabaseclient';
+
 export default function RootLayout({ children }) {
   const { width, breakpoints } = useWidth();
   const [collapsed] = useSidebar();
@@ -34,16 +37,24 @@ export default function RootLayout({ children }) {
   const [navbarType] = useNavbarType();
   const [isMonoChrome] = useMonoChrome();
   const router = useRouter();
-  const { isAuth } = useSelector((state) => state.auth);
-
-  // useEffect(() => {
-  //   if (!isAuth) {
-  //     router.push("/");
-  //   }
-  //   //darkMode;
-  // }, [isAuth]);
+  const { user, loading } = useAuth();
+  useEffect(() => {
+    const checkAuthToken = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session) {
+        console.log('No session found, redirecting to login');
+        router.push('/');
+      }
+    };
+    checkAuthToken();
+  }, [router]);
   const location = usePathname();
-  // header switch class
+  const [contentWidth] = useContentWidth();
+  const [menuType] = useMenulayout();
+  const [menuHidden] = useMenuHidden();
+  const [mobileMenu, setMobileMenu] = useMobileMenu();
   const switchHeaderClass = () => {
     if (menuType === 'horizontal' || menuHidden) {
       return 'ltr:ml-0 rtl:mr-0';
@@ -54,12 +65,9 @@ export default function RootLayout({ children }) {
     }
   };
 
-  // content width
-  const [contentWidth] = useContentWidth();
-  const [menuType] = useMenulayout();
-  const [menuHidden] = useMenuHidden();
-  // mobile menu
-  const [mobileMenu, setMobileMenu] = useMobileMenu();
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div

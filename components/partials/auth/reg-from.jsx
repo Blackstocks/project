@@ -11,6 +11,10 @@ const schema = yup
   .object({
     name: yup.string().required('Name is Required'),
     email: yup.string().email('Invalid email').required('Email is Required'),
+    mobile: yup
+      .string()
+      .required('Mobile number is Required')
+      .matches(/^[0-9]+$/, 'Mobile number must be numeric'),
     password: yup
       .string()
       .min(8, 'Password must be at least 8 characters')
@@ -50,7 +54,12 @@ const RegForm = () => {
       const { error: insertError } = await supabase
         .from('profiles')
         .insert([
-          { id: signUpData.user.id, name: data.name, email: data.email },
+          {
+            id: signUpData.user.id,
+            name: data.name,
+            email: data.email,
+            mobile: data.mobile,
+          },
         ]);
 
       if (insertError) {
@@ -59,7 +68,7 @@ const RegForm = () => {
       } else {
         toast.success('Account created successfully!');
         setTimeout(() => {
-          router.push('/login');
+          router.push('/');
         }, 1500);
       }
     }
@@ -82,6 +91,14 @@ const RegForm = () => {
         placeholder='Enter your email'
         register={register}
         error={errors.email}
+      />
+      <Textinput
+        name='mobile'
+        label='Mobile'
+        type='text'
+        placeholder='Enter your mobile number'
+        register={register}
+        error={errors.mobile}
       />
       <Textinput
         name='password'
