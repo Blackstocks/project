@@ -202,6 +202,7 @@ const FormWizard = () => {
     console.log('Is Last Step:', isLastStep);
 
     if (isLastStep) {
+      setIsLoading(true);
       try {
         console.log('Form data:', data);
 
@@ -221,6 +222,7 @@ const FormWizard = () => {
 
         for (const field in fileFields) {
           if (data[field] && data[field][0]) {
+            console.log(`Uploading ${field}:`, data[field][0]);
             try {
               uploadedFiles[field] = await handleFileUpload(
                 data[field][0],
@@ -236,38 +238,39 @@ const FormWizard = () => {
           }
         }
 
-        console.log('Uploaded Files:', uploadedFiles);
-
         // Insert company profile data
         const { data: companyProfileData, error: companyProfileError } =
-          await supabase.from('company_profile').insert([
-            {
-              company_name: data.companyName,
-              short_description: data.shortDescription,
-              incorporation_date: data.incorporationDate,
-              country: data.country,
-              state_city: data.stateCity,
-              office_address: data.officeAddress,
-              pin_code: data.pinCode,
-              company_website: data.companyWebsite,
-              linkedin_profile: data.linkedinProfile,
-              company_logo: uploadedFiles.companyLogo || '',
-            },
-          ]);
+          await supabase
+            .from('company_profile')
+            .insert([
+              {
+                company_name: data.companyName,
+                short_description: data.shortDescription,
+                incorporation_date: data.incorporationDate,
+                country: data.country,
+                state_city: data.stateCity,
+                office_address: data.officeAddress,
+                pin_code: data.pinCode,
+                company_website: data.companyWebsite,
+                linkedin_profile: data.linkedinProfile,
+                company_logo: uploadedFiles.companyLogo || '',
+              },
+            ])
+            .select();
+
+        console.log(
+          'Company Profile Response:',
+          companyProfileData,
+          companyProfileError
+        );
 
         if (companyProfileError) {
-          console.error(
-            'Error inserting company profile:',
-            companyProfileError
-          );
           throw companyProfileError;
         }
-        console.log('Company Profile Data:', companyProfileData);
 
-        const companyId = companyProfileData[0]?.id;
-        if (!companyId) {
-          throw new Error('Company ID not found in companyProfileData');
-        }
+        const companyId = companyProfileData[0].id;
+
+        console.log('Company ID:', companyId);
 
         // Insert business details along with file URLs
         const { error: businessDetailsError } = await supabase
@@ -282,24 +285,22 @@ const FormWizard = () => {
               team_size: data.teamSize,
               usp_moat: data.uspMoat,
               certificate_of_incorporation:
-                uploadedFiles.certificateOfIncorporation || '',
-              gst_certificate: uploadedFiles.gstCertificate || '',
+                uploadedFiles.certificate_of_incorporation || '',
+              gst_certificate: uploadedFiles.gst_certificate || '',
               startup_india_certificate:
-                uploadedFiles.startupIndiaCertificate || '',
-              due_diligence_report: uploadedFiles.dueDiligenceReport || '',
+                uploadedFiles.startup_india_certificate || '',
+              due_diligence_report: uploadedFiles.due_diligence_report || '',
               business_valuation_report:
-                uploadedFiles.businessValuationReport || '',
+                uploadedFiles.business_valuation_report || '',
               mis: uploadedFiles.mis || '',
-              pitch_deck: uploadedFiles.pitchDeck || '',
-              video_pitch: uploadedFiles.videoPitch || '',
+              pitch_deck: uploadedFiles.pitch_deck || '',
+              video_pitch: uploadedFiles.video_pitch || '',
             },
           ]);
 
+        console.log('Business Details Response:', businessDetailsError);
+
         if (businessDetailsError) {
-          console.error(
-            'Error inserting business details:',
-            businessDetailsError
-          );
           throw businessDetailsError;
         }
 
@@ -311,7 +312,7 @@ const FormWizard = () => {
               company_id: companyId,
               total_funding_ask: data.totalFundingAsk,
               amount_committed: data.amountCommitted,
-              current_cap_table: uploadedFiles.currentCapTable || '',
+              current_cap_table: uploadedFiles.current_cap_table || '',
               government_grants: data.governmentGrants,
               equity_split: data.equitySplit,
               fund_utilization: data.fundUtilization,
@@ -320,11 +321,9 @@ const FormWizard = () => {
             },
           ]);
 
+        console.log('Funding Information Response:', fundingInformationError);
+
         if (fundingInformationError) {
-          console.error(
-            'Error inserting funding information:',
-            fundingInformationError
-          );
           throw fundingInformationError;
         }
 
@@ -339,11 +338,9 @@ const FormWizard = () => {
             },
           ]);
 
+        console.log('Contact Information Response:', contactInformationError);
+
         if (contactInformationError) {
-          console.error(
-            'Error inserting contact information:',
-            contactInformationError
-          );
           throw contactInformationError;
         }
 
@@ -363,11 +360,9 @@ const FormWizard = () => {
             },
           ]);
 
+        console.log('Founder Information Response:', founderInformationError);
+
         if (founderInformationError) {
-          console.error(
-            'Error inserting founder information:',
-            founderInformationError
-          );
           throw founderInformationError;
         }
 
@@ -385,11 +380,12 @@ const FormWizard = () => {
               },
             ]);
 
+          console.log(
+            'Co-Founder Information Response:',
+            cofounderInformationError
+          );
+
           if (cofounderInformationError) {
-            console.error(
-              'Error inserting co-founder information:',
-              cofounderInformationError
-            );
             throw cofounderInformationError;
           }
         }
