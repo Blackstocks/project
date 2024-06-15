@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import Textinput from '@/components/ui/Textinput';
 import InputGroup from '@/components/ui/InputGroup';
@@ -8,6 +10,8 @@ import Icon from '@/components/ui/Icon';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import Loading from '@/components/Loading';
+import { supabase } from '@/lib/supabaseclient';
 
 const steps = [
   {
@@ -32,14 +36,14 @@ const steps = [
   },
 ];
 
-let contactSchema = yup.object().shape({
+const contactSchema = yup.object().shape({
   mobile: yup.string().required('Mobile number is required'),
   businessDescription: yup
     .string()
-    .required('Business description is required'),
+    .required('Please provide a brief description of your business'),
 });
 
-let profileSchema = yup.object().shape({
+const profileSchema = yup.object().shape({
   companyName: yup.string().required('Company name is required'),
   shortDescription: yup.string().required('Short description is required'),
   incorporationDate: yup.date().required('Date of Incorporation is required'),
@@ -55,9 +59,10 @@ let profileSchema = yup.object().shape({
     .string()
     .url('Invalid URL')
     .required('LinkedIn profile is required'),
+  companyLogo: yup.mixed().required('Company logo is required'), // Added validation for company logo
 });
 
-let founderAndEducationSchema = yup.object().shape({
+const founderAndEducationSchema = yup.object().shape({
   founderName: yup.string().required('Full name is required'),
   founderEmail: yup
     .string()
@@ -68,35 +73,28 @@ let founderAndEducationSchema = yup.object().shape({
     .string()
     .url('Invalid URL')
     .required('LinkedIn profile is required'),
-  cofounder: yup.boolean(),
-  cofounderName: yup.string().when('cofounder', {
-    is: true,
-    then: yup.string().required('Co-Founder name is required'),
-  }),
-  cofounderEmail: yup.string().when('cofounder', {
-    is: true,
-    then: yup
-      .string()
-      .email('Invalid email')
-      .required('Co-Founder email is required'),
-  }),
-  cofounderMobile: yup.string().when('cofounder', {
-    is: true,
-    then: yup.string().required('Co-Founder mobile number is required'),
-  }),
-  cofounderLinkedin: yup.string().when('cofounder', {
-    is: true,
-    then: yup
-      .string()
-      .url('Invalid URL')
-      .required('Co-Founder LinkedIn profile is required'),
-  }),
+  cofounderName: yup.string(), // Not required initially
   degreeName: yup.string().required('Degree name is required'),
   collegeName: yup.string().required('College name is required'),
   graduationYear: yup.date().required('Year of graduation is required'),
 });
 
-let businessSchema = yup.object().shape({
+const cofounderSchema = yup.object().shape({
+  cofounderName: yup.string().required('Co-Founder name is required'),
+  cofounderEmail: yup
+    .string()
+    .email('Invalid email')
+    .required('Co-Founder email is required'),
+  cofounderMobile: yup
+    .string()
+    .required('Co-Founder mobile number is required'),
+  cofounderLinkedin: yup
+    .string()
+    .url('Invalid URL')
+    .required('Co-Founder LinkedIn profile is required'),
+});
+
+const businessSchema = yup.object().shape({
   certificateOfIncorporation: yup
     .mixed()
     .required('Certificate of Incorporation is required'),
@@ -121,7 +119,7 @@ let businessSchema = yup.object().shape({
   uspMoat: yup.string().required('USP/MOAT is required'),
 });
 
-let fundingSchema = yup.object().shape({
+const fundingSchema = yup.object().shape({
   previousFunding: yup.boolean(),
   totalFundingAsk: yup.number().required('Total funding ask is required'),
   amountCommitted: yup.number().required('Amount committed so far is required'),
@@ -139,51 +137,291 @@ let fundingSchema = yup.object().shape({
 
 const FormWizard = () => {
   const [stepNumber, setStepNumber] = useState(0);
-
-  let currentStepSchema;
-  switch (stepNumber) {
-    case 0:
-      currentStepSchema = contactSchema;
-      break;
-    case 1:
-      currentStepSchema = profileSchema;
-      break;
-    case 2:
-      currentStepSchema = founderAndEducationSchema;
-      break;
-    case 3:
-      currentStepSchema = businessSchema;
-      break;
-    case 4:
-      currentStepSchema = fundingSchema;
-      break;
-    default:
-      currentStepSchema = contactSchema;
-  }
-
-  useEffect(() => {}, [stepNumber]);
-
+  const [stepsWithCofounder, setStepsWithCofounder] = useState(steps);
+  const [hasCofounder, setHasCofounder] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     register,
     formState: { errors },
     handleSubmit,
     watch,
   } = useForm({
-    resolver: yupResolver(currentStepSchema),
+    resolver: yupResolver(
+      stepNumber === (hasCofounder ? 4 : 3)
+        ? businessSchema
+        : stepNumber === (hasCofounder ? 5 : 4)
+        ? fundingSchema
+        : stepNumber === 3 && hasCofounder
+        ? cofounderSchema
+        : stepNumber === 2
+        ? founderAndEducationSchema
+        : stepNumber === 1
+        ? profileSchema
+        : contactSchema
+    ),
     mode: 'all',
   });
 
-  const onSubmit = (data) => {
-    let totalSteps = steps.length;
-    const isLastStep = stepNumber === totalSteps - 1;
+  const cofounderName = watch('cofounderName');
+
+  const handleFileUpload = async (file, bucket, companyName, folder) => {
+    try {
+      const { data, error } = await supabase.storage
+        .from(bucket)
+        .upload(`${companyName}/${folder}/${Date.now()}-${file.name}`, file);
+      if (error) {
+        throw error;
+      }
+      const { publicURL, error: publicUrlError } = supabase.storage
+        .from(bucket)
+        .getPublicUrl(data.path);
+      if (publicUrlError) {
+        throw publicUrlError;
+      }
+      return publicURL; // Return the public URL of the uploaded file
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      throw error;
+    }
+  };
+
+  const onSubmit = async (data) => {
+    console.log('Form Data:', data);
+    console.log('Current Step:', stepNumber);
+
+    const isCofounderStep = hasCofounder && stepNumber === 3;
+    const isLastStep = stepNumber === stepsWithCofounder.length - 1;
+
+    console.log('Is Co-Founder Step:', isCofounderStep);
+    console.log('Is Last Step:', isLastStep);
+
     if (isLastStep) {
-      console.log(data);
+      try {
+        console.log('Form data:', data);
+
+        // Upload files and store their URLs
+        const uploadedFiles = {};
+        const fileFields = {
+          companyLogo: 'logo',
+          certificate_of_incorporation: 'certificate_of_incorporation',
+          gst_certificate: 'gst_certificate',
+          startup_india_certificate: 'startup_india_certificate',
+          due_diligence_report: 'due_diligence_report',
+          business_valuation_report: 'business_valuation_report',
+          mis: 'mis',
+          pitch_deck: 'pitch_deck',
+          video_pitch: 'video_pitch',
+        };
+
+        for (const field in fileFields) {
+          if (data[field] && data[field][0]) {
+            try {
+              console.log(`Uploading ${field}:`, data[field][0]);
+              uploadedFiles[field] = await handleFileUpload(
+                data[field][0],
+                'documents',
+                data.companyName,
+                fileFields[field]
+              );
+            } catch (uploadError) {
+              console.error(`Error uploading ${field}:`, uploadError);
+            }
+          } else {
+            console.log(`${field} is not provided.`);
+          }
+        }
+
+        // Insert company profile data
+        const { data: companyProfileData, error: companyProfileError } =
+          await supabase
+            .from('company_profile')
+            .insert([
+              {
+                company_name: data.companyName,
+                short_description: data.shortDescription,
+                incorporation_date: data.incorporationDate,
+                country: data.country,
+                state_city: data.stateCity,
+                office_address: data.officeAddress,
+                pin_code: data.pinCode,
+                company_website: data.companyWebsite,
+                linkedin_profile: data.linkedinProfile,
+                company_logo: uploadedFiles.companyLogo || '',
+              },
+            ])
+            .select('*');
+
+        if (companyProfileError) {
+          console.error(
+            'Error inserting company profile:',
+            companyProfileError
+          );
+          throw companyProfileError;
+        }
+
+        console.log('Company Profile Data:', companyProfileData);
+
+        const companyId = companyProfileData[0]?.id;
+        if (!companyId) {
+          throw new Error('Company ID not found in companyProfileData');
+        }
+
+        // Insert business details along with file URLs
+        const { error: businessDetailsError } = await supabase
+          .from('business_details')
+          .insert([
+            {
+              company_id: companyId,
+              industry_sector: data.industrySector,
+              current_stage: data.currentStage,
+              current_traction: data.currentTraction,
+              target_audience: data.targetAudience,
+              team_size: data.teamSize,
+              usp_moat: data.uspMoat,
+              certificate_of_incorporation:
+                uploadedFiles.certificate_of_incorporation || '',
+              gst_certificate: uploadedFiles.gst_certificate || '',
+              startup_india_certificate:
+                uploadedFiles.startup_india_certificate || '',
+              due_diligence_report: uploadedFiles.due_diligence_report || '',
+              business_valuation_report:
+                uploadedFiles.business_valuation_report || '',
+              mis: uploadedFiles.mis || '',
+              pitch_deck: uploadedFiles.pitch_deck || '',
+              video_pitch: uploadedFiles.video_pitch || '',
+            },
+          ]);
+
+        if (businessDetailsError) {
+          console.error(
+            'Error inserting business details:',
+            businessDetailsError
+          );
+          throw businessDetailsError;
+        }
+
+        // Insert funding information
+        const { error: fundingInformationError } = await supabase
+          .from('funding_information')
+          .insert([
+            {
+              company_id: companyId,
+              total_funding_ask: data.totalFundingAsk,
+              amount_committed: data.amountCommitted,
+              current_cap_table: uploadedFiles.current_cap_table || '',
+              government_grants: data.governmentGrants,
+              equity_split: data.equitySplit,
+              fund_utilization: data.fundUtilization,
+              arr: data.arr,
+              mrr: data.mrr,
+            },
+          ]);
+
+        if (fundingInformationError) {
+          console.error(
+            'Error inserting funding information:',
+            fundingInformationError
+          );
+          throw fundingInformationError;
+        }
+
+        // Insert contact information
+        const { error: contactInformationError } = await supabase
+          .from('contact_information')
+          .insert([
+            {
+              company_id: companyId,
+              mobile: data.mobile,
+              business_description: data.businessDescription,
+            },
+          ]);
+
+        if (contactInformationError) {
+          console.error(
+            'Error inserting contact information:',
+            contactInformationError
+          );
+          throw contactInformationError;
+        }
+
+        // Insert founder information
+        const { error: founderInformationError } = await supabase
+          .from('founder_information')
+          .insert([
+            {
+              company_id: companyId,
+              founder_name: data.founderName,
+              founder_email: data.founderEmail,
+              founder_mobile: data.founderMobile,
+              founder_linkedin: data.founderLinkedin,
+              degree_name: data.degreeName,
+              college_name: data.collegeName,
+              graduation_year: data.graduationYear,
+            },
+          ]);
+
+        if (founderInformationError) {
+          console.error(
+            'Error inserting founder information:',
+            founderInformationError
+          );
+          throw founderInformationError;
+        }
+
+        // Insert co-founder information (if exists)
+        if (hasCofounder) {
+          const { error: cofounderInformationError } = await supabase
+            .from('cofounder_information')
+            .insert([
+              {
+                company_id: companyId,
+                cofounder_name: data.cofounderName,
+                cofounder_email: data.cofounderEmail,
+                cofounder_mobile: data.cofounderMobile,
+                cofounder_linkedin: data.cofounderLinkedin,
+              },
+            ]);
+
+          if (cofounderInformationError) {
+            console.error(
+              'Error inserting co-founder information:',
+              cofounderInformationError
+            );
+            throw cofounderInformationError;
+          }
+        }
+
+        console.log('Data saved successfully');
+      } catch (error) {
+        console.error('Error saving data:', error);
+        // Handle the error (e.g., show a message to the user)
+      } finally {
+        setIsLoading(false); // Set loading to false when submission ends
+      }
     } else {
+      console.log('Going to next step');
       setStepNumber(stepNumber + 1);
     }
   };
 
+  useEffect(() => {
+    if (cofounderName && cofounderName.length > 0 && !hasCofounder) {
+      console.log('Adding co-founder step');
+      setStepsWithCofounder([
+        ...steps.slice(0, 3),
+        { id: 4, title: 'Co-Founder Information' },
+        ...steps.slice(3),
+      ]);
+      setHasCofounder(true);
+    } else if (!cofounderName && hasCofounder) {
+      console.log('Removing co-founder step');
+      setStepsWithCofounder(steps);
+      setHasCofounder(false);
+    }
+  }, [cofounderName, hasCofounder]);
+
   const handlePrev = () => {
+    console.log('Going to previous step');
     setStepNumber(stepNumber - 1);
   };
 
@@ -192,7 +430,7 @@ const FormWizard = () => {
       <Card title='Startup Registration'>
         <div>
           <div className='flex z-[5] items-center relative justify-center md:mx-8'>
-            {steps.map((item, i) => (
+            {stepsWithCofounder.map((item, i) => (
               <div
                 className='relative z-[1] items-center item flex flex-start flex-1 last:flex-none group'
                 key={i}
@@ -342,6 +580,14 @@ const FormWizard = () => {
                       error={errors.linkedinProfile}
                       register={register}
                     />
+                    <InputGroup
+                      label='Upload Company Logo'
+                      type='file'
+                      name='companyLogo'
+                      error={errors.companyLogo}
+                      register={register}
+                    />{' '}
+                    {/* Added file input for company logo */}
                   </div>
                 </div>
               )}
@@ -386,48 +632,14 @@ const FormWizard = () => {
                       error={errors.founderLinkedin}
                       register={register}
                     />
-                    <InputGroup
-                      label='Any other Co-Founder?'
-                      type='checkbox'
-                      name='cofounder'
+                    <Textinput
+                      label='Co-Founder Full Name'
+                      type='text'
+                      placeholder='Co-Founder Full Name'
+                      name='cofounderName'
+                      error={errors.cofounderName}
                       register={register}
                     />
-                    {watch('cofounder') && (
-                      <>
-                        <Textinput
-                          label='Co-Founder Full Name'
-                          type='text'
-                          placeholder='Co-Founder Full Name'
-                          name='cofounderName'
-                          error={errors.cofounderName}
-                          register={register}
-                        />
-                        <Textinput
-                          label='Co-Founder Email'
-                          type='email'
-                          placeholder='Co-Founder Email'
-                          name='cofounderEmail'
-                          error={errors.cofounderEmail}
-                          register={register}
-                        />
-                        <Textinput
-                          label='Co-Founder Mobile Number'
-                          type='text'
-                          placeholder='Co-Founder Mobile Number'
-                          name='cofounderMobile'
-                          error={errors.cofounderMobile}
-                          register={register}
-                        />
-                        <Textinput
-                          label='Co-Founder LinkedIn Profile'
-                          type='url'
-                          placeholder='Co-Founder LinkedIn Profile'
-                          name='cofounderLinkedin'
-                          error={errors.cofounderLinkedin}
-                          register={register}
-                        />
-                      </>
-                    )}
                     <Textinput
                       label='Degree Name'
                       type='text'
@@ -456,7 +668,51 @@ const FormWizard = () => {
                 </div>
               )}
 
-              {stepNumber === 3 && (
+              {stepNumber === 3 && hasCofounder && (
+                <div>
+                  <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 pt-10'>
+                    <div className='lg:col-span-3 md:col-span-2 col-span-1'>
+                      <h4 className='text-base text-slate-800 dark:text-slate-300 my-6'>
+                        Enter Co-Founder Information
+                      </h4>
+                    </div>
+                    <Textinput
+                      label='Co-Founder Full Name'
+                      type='text'
+                      placeholder='Co-Founder Full Name'
+                      name='cofounderName'
+                      error={errors.cofounderName}
+                      register={register}
+                    />
+                    <Textinput
+                      label='Co-Founder Email'
+                      type='email'
+                      placeholder='Co-Founder Email'
+                      name='cofounderEmail'
+                      error={errors.cofounderEmail}
+                      register={register}
+                    />
+                    <Textinput
+                      label='Co-Founder Mobile Number'
+                      type='text'
+                      placeholder='Co-Founder Mobile Number'
+                      name='cofounderMobile'
+                      error={errors.cofounderMobile}
+                      register={register}
+                    />
+                    <Textinput
+                      label='Co-Founder LinkedIn Profile'
+                      type='url'
+                      placeholder='Co-Founder LinkedIn Profile'
+                      name='cofounderLinkedin'
+                      error={errors.cofounderLinkedin}
+                      register={register}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {stepNumber === (hasCofounder ? 4 : 3) && (
                 <div>
                   <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 pt-10'>
                     <div className='lg:col-span-3 md:col-span-2 col-span-1'>
@@ -570,7 +826,7 @@ const FormWizard = () => {
                 </div>
               )}
 
-              {stepNumber === 4 && (
+              {stepNumber === (hasCofounder ? 5 : 4) && (
                 <div>
                   <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 pt-10'>
                     <div className='lg:col-span-3 md:col-span-2 col-span-1'>
@@ -578,12 +834,6 @@ const FormWizard = () => {
                         Enter Funding Information
                       </h4>
                     </div>
-                    <InputGroup
-                      label='Any Previous Funding?'
-                      type='checkbox'
-                      name='previousFunding'
-                      register={register}
-                    />
                     <Textinput
                       label='Total Funding Ask'
                       type='number'
@@ -662,9 +912,16 @@ const FormWizard = () => {
                   />
                 )}
                 <Button
-                  text={stepNumber !== steps.length - 1 ? 'Next' : 'Submit'}
-                  className='btn-dark'
+                  text={
+                    isLoading
+                      ? 'Submitting...'
+                      : stepNumber !== stepsWithCofounder.length - 1
+                      ? 'Next'
+                      : 'Submit'
+                  }
+                  className={`btn-dark ${isLoading ? 'loading' : ''}`}
                   type='submit'
+                  disabled={isLoading}
                 />
               </div>
             </form>
