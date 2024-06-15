@@ -165,22 +165,28 @@ const FormWizard = () => {
   const cofounderName = watch('cofounderName');
 
   const handleFileUpload = async (file, bucket, companyName, folder) => {
+    if (!file) {
+      console.log(`${folder} is not provided.`);
+      return null;
+    }
+
+    console.log(`Uploading ${folder}:`, file);
+
+    const filePath = `${companyName}/${folder}/${Date.now()}-${file.name}`;
+
     try {
       const { data, error } = await supabase.storage
         .from(bucket)
-        .upload(`${companyName}/${folder}/${Date.now()}-${file.name}`, file);
+        .upload(filePath, file);
+
       if (error) {
         throw error;
       }
-      const { publicURL, error: publicUrlError } = supabase.storage
-        .from(bucket)
-        .getPublicUrl(data.path);
-      if (publicUrlError) {
-        throw publicUrlError;
-      }
-      return publicURL; // Return the public URL of the uploaded file
+
+      console.log(`${folder} uploaded successfully:`, data.path);
+      return data.path; // Return the file path
     } catch (error) {
-      console.error('Error uploading file:', error);
+      console.error(`Error uploading ${folder}:`, error);
       throw error;
     }
   };
@@ -203,20 +209,19 @@ const FormWizard = () => {
         const uploadedFiles = {};
         const fileFields = {
           companyLogo: 'logo',
-          certificate_of_incorporation: 'certificate_of_incorporation',
-          gst_certificate: 'gst_certificate',
-          startup_india_certificate: 'startup_india_certificate',
-          due_diligence_report: 'due_diligence_report',
-          business_valuation_report: 'business_valuation_report',
+          certificateOfIncorporation: 'certificate_of_incorporation',
+          gstCertificate: 'gst_certificate',
+          startupIndiaCertificate: 'startup_india_certificate',
+          dueDiligenceReport: 'due_diligence_report',
+          businessValuationReport: 'business_valuation_report',
           mis: 'mis',
-          pitch_deck: 'pitch_deck',
-          video_pitch: 'video_pitch',
+          pitchDeck: 'pitch_deck',
+          videoPitch: 'video_pitch',
         };
 
         for (const field in fileFields) {
           if (data[field] && data[field][0]) {
             try {
-              console.log(`Uploading ${field}:`, data[field][0]);
               uploadedFiles[field] = await handleFileUpload(
                 data[field][0],
                 'documents',
@@ -231,25 +236,24 @@ const FormWizard = () => {
           }
         }
 
+        console.log('Uploaded Files:', uploadedFiles);
+
         // Insert company profile data
         const { data: companyProfileData, error: companyProfileError } =
-          await supabase
-            .from('company_profile')
-            .insert([
-              {
-                company_name: data.companyName,
-                short_description: data.shortDescription,
-                incorporation_date: data.incorporationDate,
-                country: data.country,
-                state_city: data.stateCity,
-                office_address: data.officeAddress,
-                pin_code: data.pinCode,
-                company_website: data.companyWebsite,
-                linkedin_profile: data.linkedinProfile,
-                company_logo: uploadedFiles.companyLogo || '',
-              },
-            ])
-            .select('*');
+          await supabase.from('company_profile').insert([
+            {
+              company_name: data.companyName,
+              short_description: data.shortDescription,
+              incorporation_date: data.incorporationDate,
+              country: data.country,
+              state_city: data.stateCity,
+              office_address: data.officeAddress,
+              pin_code: data.pinCode,
+              company_website: data.companyWebsite,
+              linkedin_profile: data.linkedinProfile,
+              company_logo: uploadedFiles.companyLogo || '',
+            },
+          ]);
 
         if (companyProfileError) {
           console.error(
@@ -258,7 +262,6 @@ const FormWizard = () => {
           );
           throw companyProfileError;
         }
-
         console.log('Company Profile Data:', companyProfileData);
 
         const companyId = companyProfileData[0]?.id;
@@ -279,16 +282,16 @@ const FormWizard = () => {
               team_size: data.teamSize,
               usp_moat: data.uspMoat,
               certificate_of_incorporation:
-                uploadedFiles.certificate_of_incorporation || '',
-              gst_certificate: uploadedFiles.gst_certificate || '',
+                uploadedFiles.certificateOfIncorporation || '',
+              gst_certificate: uploadedFiles.gstCertificate || '',
               startup_india_certificate:
-                uploadedFiles.startup_india_certificate || '',
-              due_diligence_report: uploadedFiles.due_diligence_report || '',
+                uploadedFiles.startupIndiaCertificate || '',
+              due_diligence_report: uploadedFiles.dueDiligenceReport || '',
               business_valuation_report:
-                uploadedFiles.business_valuation_report || '',
+                uploadedFiles.businessValuationReport || '',
               mis: uploadedFiles.mis || '',
-              pitch_deck: uploadedFiles.pitch_deck || '',
-              video_pitch: uploadedFiles.video_pitch || '',
+              pitch_deck: uploadedFiles.pitchDeck || '',
+              video_pitch: uploadedFiles.videoPitch || '',
             },
           ]);
 
@@ -308,7 +311,7 @@ const FormWizard = () => {
               company_id: companyId,
               total_funding_ask: data.totalFundingAsk,
               amount_committed: data.amountCommitted,
-              current_cap_table: uploadedFiles.current_cap_table || '',
+              current_cap_table: uploadedFiles.currentCapTable || '',
               government_grants: data.governmentGrants,
               equity_split: data.equitySplit,
               fund_utilization: data.fundUtilization,
@@ -394,9 +397,8 @@ const FormWizard = () => {
         console.log('Data saved successfully');
       } catch (error) {
         console.error('Error saving data:', error);
-        // Handle the error (e.g., show a message to the user)
       } finally {
-        setIsLoading(false); // Set loading to false when submission ends
+        setIsLoading(false);
       }
     } else {
       console.log('Going to next step');
