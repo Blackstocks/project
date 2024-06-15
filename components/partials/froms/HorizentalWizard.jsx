@@ -218,6 +218,7 @@ const FormWizard = () => {
           mis: 'mis',
           pitchDeck: 'pitch_deck',
           videoPitch: 'video_pitch',
+          currentCapTable: 'current_cap_table',
         };
 
         for (const field in fileFields) {
@@ -285,16 +286,16 @@ const FormWizard = () => {
               team_size: data.teamSize,
               usp_moat: data.uspMoat,
               certificate_of_incorporation:
-                uploadedFiles.certificate_of_incorporation || '',
-              gst_certificate: uploadedFiles.gst_certificate || '',
+                uploadedFiles.certificateOfIncorporation || '',
+              gst_certificate: uploadedFiles.gstCertificate || '',
               startup_india_certificate:
-                uploadedFiles.startup_india_certificate || '',
-              due_diligence_report: uploadedFiles.due_diligence_report || '',
+                uploadedFiles.startupIndiaCertificate || '',
+              due_diligence_report: uploadedFiles.dueDiligenceReport || '',
               business_valuation_report:
-                uploadedFiles.business_valuation_report || '',
+                uploadedFiles.businessValuationReport || '',
               mis: uploadedFiles.mis || '',
-              pitch_deck: uploadedFiles.pitch_deck || '',
-              video_pitch: uploadedFiles.video_pitch || '',
+              pitch_deck: uploadedFiles.pitchDeck || '',
+              video_pitch: uploadedFiles.videoPitch || '',
             },
           ]);
 
@@ -312,7 +313,7 @@ const FormWizard = () => {
               company_id: companyId,
               total_funding_ask: data.totalFundingAsk,
               amount_committed: data.amountCommitted,
-              current_cap_table: uploadedFiles.current_cap_table || '',
+              current_cap_table: uploadedFiles.currentCapTable || '',
               government_grants: data.governmentGrants,
               equity_split: data.equitySplit,
               fund_utilization: data.fundUtilization,
