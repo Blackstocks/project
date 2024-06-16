@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+'use client';
+import React, { useState, useEffect } from 'react';
 import Textinput from '@/components/ui/Textinput';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -8,6 +9,7 @@ import Checkbox from '@/components/ui/Checkbox';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
 import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/lib/supabaseclient'; // Import Supabase client
 
 const schema = yup
   .object({
@@ -30,9 +32,36 @@ const LoginForm = () => {
   const router = useRouter();
   const { login } = useAuth();
 
+  useEffect(() => {
+    const checkIfLoggedIn = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        router.push('/profile');
+      }
+    };
+
+    checkIfLoggedIn();
+  }, [router]);
+
   const onSubmit = async (data) => {
     try {
-      await login(data.email, data.password);
+      const { user, error: loginError } = await login(
+        data.email,
+        data.password
+      );
+      if (loginError) {
+        throw loginError;
+      }
+
+      console.log('User object after login:', user); // Log the user object
+
+      if (!user || !user.id) {
+        throw new Error('Invalid user object returned from login function');
+      }
+
       toast.success('Login successful!', {
         position: 'top-right',
         autoClose: 500,
@@ -43,6 +72,57 @@ const LoginForm = () => {
         progress: undefined,
         theme: 'light',
       });
+
+      const userId = user.id;
+
+      // Fetch profile details
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+      if (profileError) {
+        throw profileError;
+      }
+
+      let formFilled = false;
+
+      // Check if the form has already been filled
+      if (profile.user_type === 'investor') {
+        const { data: investorDetails, error: investorError } = await supabase
+          .from('investor_signup')
+          .select('*')
+          .eq('profile_id', userId)
+          .single();
+
+        if (investorDetails) {
+          formFilled = true;
+        }
+      } else if (profile.user_type === 'startup') {
+        const { data: startupDetails, error: startupError } = await supabase
+          .from('startup_form')
+          .select('*')
+          .eq('profile_id', userId)
+          .single();
+
+        if (startupDetails) {
+          formFilled = true;
+        }
+      }
+
+      // Redirect based on whether the form has been filled or not
+      if (formFilled) {
+        router.push('/profile');
+      } else {
+        if (profile.user_type === 'investor') {
+          router.push(`register/investor-form?profile_id=${profile.id}`);
+        } else if (profile.user_type === 'startup') {
+          router.push(`register/startup-form?profile_id=${profile.id}`);
+        } else {
+          router.push('/profile'); // Redirect to a general dashboard or another appropriate page
+        }
+      }
     } catch (error) {
       console.error('Login submission error:', error); // Logging error
       toast.error('Invalid credentials', {

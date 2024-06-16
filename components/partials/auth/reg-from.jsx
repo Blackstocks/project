@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import Textinput from '@/components/ui/Textinput';
@@ -6,6 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseclient'; // Import Supabase client
+import Dropdowntype from '@/components/ui/Dropdown1';
 
 const schema = yup
   .object({
@@ -23,15 +26,18 @@ const schema = yup
     confirmpassword: yup
       .string()
       .oneOf([yup.ref('password'), null], 'Passwords must match'),
+    user_type: yup.string().required('User type is required'),
   })
   .required();
 
 const RegForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [userType, setUserType] = useState('Select User Type');
   const {
     register,
     formState: { errors },
     handleSubmit,
+    setValue,
   } = useForm({
     resolver: yupResolver(schema),
     mode: 'all',
@@ -42,36 +48,59 @@ const RegForm = () => {
   const onSubmit = async (data) => {
     setIsSubmitting(true);
 
-    const { data: signUpData, error } = await supabase.auth.signUp({
-      email: data.email,
-      password: data.password,
-    });
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp(
+      {
+        email: data.email,
+        password: data.password,
+      }
+    );
 
-    if (error) {
-      toast.error(error.message);
+    if (signUpError) {
+      toast.error(signUpError.message);
       setIsSubmitting(false);
-    } else if (signUpData?.user) {
-      const { error: insertError } = await supabase
-        .from('profiles')
-        .insert([
-          {
-            id: signUpData.user.id,
-            name: data.name,
-            email: data.email,
-            mobile: data.mobile,
-          },
-        ]);
+      return;
+    }
+
+    if (signUpData?.user) {
+      const userId = signUpData.user.id;
+
+      // Update the user's profile with additional details
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: {
+          display_name: data.name, // Adding display name to the user's metadata
+        },
+      });
+
+      if (updateError) {
+        toast.error(updateError.message);
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Insert additional user data into the profiles table
+      const { error: insertError } = await supabase.from('profiles').insert([
+        {
+          id: userId,
+          name: data.name,
+          email: data.email,
+          mobile: data.mobile,
+          user_type: data.user_type,
+        },
+      ]);
 
       if (insertError) {
         toast.error(insertError.message);
         setIsSubmitting(false);
       } else {
         toast.success('Account created successfully!');
-        setTimeout(() => {
-          router.push('/');
-        }, 1500);
+        router.push('/'); // Redirect to login page after registration
       }
     }
+  };
+
+  const handleSelectUserType = (value) => {
+    setUserType(value.charAt(0).toUpperCase() + value.slice(1));
+    setValue('user_type', value);
   };
 
   return (
@@ -116,7 +145,15 @@ const RegForm = () => {
         register={register}
         error={errors.confirmpassword}
       />
-
+      <Dropdowntype
+        label={userType}
+        items={[
+          { label: 'Startup', value: 'startup' },
+          { label: 'Investor', value: 'investor' },
+        ]}
+        onSelect={handleSelectUserType}
+        error={errors.user_type}
+      />
       <button
         className='btn btn-dark block w-full text-center'
         type='submit'

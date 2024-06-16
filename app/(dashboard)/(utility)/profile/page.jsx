@@ -1,13 +1,77 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabaseclient';
 import Link from 'next/link';
 import Icon from '@/components/ui/Icon';
 import Card from '@/components/ui/Card';
-import BasicArea from '@/components/partials/chart/appex-chart/BasicArea';
-import { useAuth } from '@/context/AuthContext';
 
 const Profile = () => {
-  const { user } = useAuth();
+  const [user, setUser] = useState(null);
+  const [details, setDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+
+      if (error) {
+        console.error('Error fetching user:', error);
+        return;
+      }
+
+      if (user) {
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        if (profileError) {
+          console.error('Error fetching profile:', profileError);
+        } else {
+          setUser(profile);
+
+          // Fetch relevant details based on user type
+          if (profile.user_type === 'investor') {
+            const { data: investor, error: investorError } = await supabase
+              .from('investor_signup')
+              .select('*')
+              .eq('profile_id', user.id)
+              .single();
+
+            if (investorError) {
+              console.error('Error fetching investor details:', investorError);
+            } else {
+              setDetails({ ...investor, type: 'investor' });
+            }
+          } else if (profile.user_type === 'startup') {
+            const { data: startup, error: startupError } = await supabase
+              .from('company_profile')
+              .select('*')
+              .eq('profile_id', user.id)
+              .single();
+
+            if (startupError) {
+              console.error('Error fetching startup details:', startupError);
+            } else {
+              setDetails({ ...startup, type: 'startup' });
+            }
+          }
+        }
+      }
+
+      setLoading(false);
+    };
+
+    fetchUserDetails();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
@@ -43,39 +107,10 @@ const Profile = () => {
               </div>
             </div>
           </div>
-
-          {/* <div className='profile-info-500 md:flex md:text-start text-center flex-1 max-w-[516px] md:space-y-0 space-y-4'>
-            <div className='flex-1'>
-              <div className='text-base text-slate-900 dark:text-slate-300 font-medium mb-1'>
-                $32,400
-              </div>
-              <div className='text-sm text-slate-600 font-light dark:text-slate-300'>
-                Total Balance
-              </div>
-            </div>
-
-            <div className='flex-1'>
-              <div className='text-base text-slate-900 dark:text-slate-300 font-medium mb-1'>
-                200
-              </div>
-              <div className='text-sm text-slate-600 font-light dark:text-slate-300'>
-                Board Card
-              </div>
-            </div>
-
-            <div className='flex-1'>
-              <div className='text-base text-slate-900 dark:text-slate-300 font-medium mb-1'>
-                3200
-              </div>
-              <div className='text-sm text-slate-600 font-light dark:text-slate-300'>
-                Calendar Events
-              </div>
-            </div>
-          </div> */}
         </div>
         <div className='grid grid-cols-12 gap-6'>
-          <div className='lg:col-span-4 col-span-12'>
-            <Card title='Info'>
+          <div className='lg:col-span-12 col-span-12'>
+            <Card title='User Info'>
               <ul className='list space-y-8'>
                 <li className='flex space-x-3 rtl:space-x-reverse'>
                   <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
@@ -103,10 +138,10 @@ const Profile = () => {
                       PHONE
                     </div>
                     <a
-                      href={`tel:${user?.phone || '0189749676767'}`}
+                      href={`tel:${user?.mobile || '0189749676767'}`}
                       className='text-base text-slate-600 dark:text-slate-50'
                     >
-                      {user?.phone || '+1-202-555-0151'}
+                      {user?.mobile || '+1-202-555-0151'}
                     </a>
                   </div>
                 </li>
@@ -128,11 +163,185 @@ const Profile = () => {
               </ul>
             </Card>
           </div>
-          <div className='lg:col-span-8 col-span-12'>
-            <Card title='User Overview'>
-              <BasicArea height={190} />
-            </Card>
-          </div>
+
+          {details?.type === 'investor' && (
+            <div className='lg:col-span-12 col-span-12'>
+              <Card title='Investor Details'>
+                <ul className='list space-y-8'>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:briefcase' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        INVESTOR TYPE
+                      </div>
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {details.type}
+                      </div>
+                    </div>
+                  </li>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:cash' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        CHEQUE SIZE
+                      </div>
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {details.cheque_size}
+                      </div>
+                    </div>
+                  </li>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:chart-bar' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        SECTORS
+                      </div>
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {Array.isArray(details.sectors)
+                          ? details.sectors.join(', ')
+                          : details.sectors}
+                      </div>
+                    </div>
+                  </li>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:calendar' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        INVESTMENT STAGE
+                      </div>
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {details.investment_stage}
+                      </div>
+                    </div>
+                  </li>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:document-text' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        INVESTMENT THESIS
+                      </div>
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {details.investment_thesis}
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </Card>
+            </div>
+          )}
+
+          {details?.type === 'startup' && (
+            <div className='lg:col-span-12 col-span-12'>
+              <Card title='Startup Details'>
+                <ul className='list space-y-8'>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:building-storefront' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        COMPANY NAME
+                      </div>
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {details.company_name}
+                      </div>
+                    </div>
+                  </li>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:calendar' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        INCORPORATION DATE
+                      </div>
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {details.incorporation_date}
+                      </div>
+                    </div>
+                  </li>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:location-marker' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        LOCATION
+                      </div>
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {details.country}, {details.state_city}
+                      </div>
+                    </div>
+                  </li>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:office-building' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        OFFICE ADDRESS
+                      </div>
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {details.office_address}
+                      </div>
+                    </div>
+                  </li>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:globe' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        COMPANY WEBSITE
+                      </div>
+                      <a
+                        href={details.company_website}
+                        className='text-base text-slate-600 dark:text-slate-50'
+                      >
+                        {details.company_website}
+                      </a>
+                    </div>
+                  </li>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:briefcase' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        BUSINESS DESCRIPTION
+                      </div>
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {details.business_description}
+                      </div>
+                    </div>
+                  </li>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:light-bulb' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        USP/MOAT
+                      </div>
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {details.usp_moat}
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </Card>
+            </div>
+          )}
         </div>
       </div>
     </div>

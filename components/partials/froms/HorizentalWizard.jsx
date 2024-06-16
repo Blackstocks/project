@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Textinput from '@/components/ui/Textinput';
 import InputGroup from '@/components/ui/InputGroup';
 import Textarea from '@/components/ui/Textarea';
@@ -9,7 +10,7 @@ import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+
 import {
   handleFileUpload,
   insertCompanyProfile,
@@ -18,135 +19,40 @@ import {
   insertContactInformation,
   insertFounderInformation,
   insertCofounderInformation,
+  checkProfileIdExists,
 } from '@/lib/actions/insertformdetails';
+import {
+  contactSchema,
+  profileSchema,
+  founderAndEducationSchema,
+  cofounderSchema,
+  businessSchema,
+  fundingSchema,
+} from '@/schema/startup-form';
 
 const steps = [
-  {
-    id: 1,
-    title: 'Contact Information',
-  },
-  {
-    id: 2,
-    title: 'Company Profile',
-  },
-  {
-    id: 3,
-    title: 'Founder and Education Information',
-  },
-  {
-    id: 4,
-    title: 'Business Details',
-  },
-  {
-    id: 5,
-    title: 'Funding Information',
-  },
+  { id: 1, title: 'Contact Information' },
+  { id: 2, title: 'Company Profile' },
+  { id: 3, title: 'Founder and Education Information' },
+  { id: 4, title: 'Business Details' },
+  { id: 5, title: 'Funding Information' },
 ];
-
-const contactSchema = yup.object().shape({
-  mobile: yup.string().required('Mobile number is required'),
-  businessDescription: yup
-    .string()
-    .required('Please provide a brief description of your business'),
-});
-
-const profileSchema = yup.object().shape({
-  companyName: yup.string().required('Company name is required'),
-  shortDescription: yup.string().required('Short description is required'),
-  incorporationDate: yup.date().required('Date of Incorporation is required'),
-  country: yup.string().required('Country is required'),
-  stateCity: yup.string().required('State, City is required'),
-  officeAddress: yup.string().required('Office address is required'),
-  pinCode: yup.string().required('Pin code is required'),
-  companyWebsite: yup
-    .string()
-    .url('Invalid URL')
-    .required('Company website is required'),
-  linkedinProfile: yup
-    .string()
-    .url('Invalid URL')
-    .required('LinkedIn profile is required'),
-  companyLogo: yup.mixed().required('Company logo is required'), // Added validation for company logo
-});
-
-const founderAndEducationSchema = yup.object().shape({
-  founderName: yup.string().required('Full name is required'),
-  founderEmail: yup
-    .string()
-    .email('Invalid email')
-    .required('Email is required'),
-  founderMobile: yup.string().required('Mobile number is required'),
-  founderLinkedin: yup
-    .string()
-    .url('Invalid URL')
-    .required('LinkedIn profile is required'),
-  cofounderName: yup.string(), // Not required initially
-  degreeName: yup.string().required('Degree name is required'),
-  collegeName: yup.string().required('College name is required'),
-  graduationYear: yup.date().required('Year of graduation is required'),
-});
-
-const cofounderSchema = yup.object().shape({
-  cofounderName: yup.string().required('Co-Founder name is required'),
-  cofounderEmail: yup
-    .string()
-    .email('Invalid email')
-    .required('Co-Founder email is required'),
-  cofounderMobile: yup
-    .string()
-    .required('Co-Founder mobile number is required'),
-  cofounderLinkedin: yup
-    .string()
-    .url('Invalid URL')
-    .required('Co-Founder LinkedIn profile is required'),
-});
-
-const businessSchema = yup.object().shape({
-  certificateOfIncorporation: yup
-    .mixed()
-    .required('Certificate of Incorporation is required'),
-  gstCertificate: yup.mixed().required('GST Certificate is required'),
-  startupIndiaCertificate: yup
-    .mixed()
-    .required('Startup India Certificate is required'),
-  dueDiligenceReport: yup.mixed().required('Due Diligence Report is required'),
-  businessValuationReport: yup
-    .mixed()
-    .required('Business Valuation Report is required'),
-  industrySector: yup.string().required('Industry or sector is required'),
-  currentStage: yup
-    .string()
-    .required('Current stage of the company is required'),
-  currentTraction: yup.string().required('Current traction is required'),
-  mis: yup.mixed().required('MIS is required'),
-  pitchDeck: yup.mixed().required('Pitch Deck is required'),
-  videoPitch: yup.mixed().required('Video Pitch is required'),
-  targetAudience: yup.string().required('Target Audience is required'),
-  teamSize: yup.number().required('Team Size is required'),
-  uspMoat: yup.string().required('USP/MOAT is required'),
-});
-
-const fundingSchema = yup.object().shape({
-  previousFunding: yup.boolean(),
-  totalFundingAsk: yup.number().required('Total funding ask is required'),
-  amountCommitted: yup.number().required('Amount committed so far is required'),
-  currentCapTable: yup.mixed().required('Current cap table is required'),
-  governmentGrants: yup.string().required('Government grants are required'),
-  equitySplit: yup
-    .string()
-    .required('Equity split among the founders is required'),
-  fundUtilization: yup
-    .string()
-    .required('Fund utilization summary is required'),
-  arr: yup.number().required('ARR is required'),
-  mrr: yup.number().required('MRR is required'),
-});
 
 const FormWizard = () => {
   const [stepNumber, setStepNumber] = useState(0);
   const [stepsWithCofounder, setStepsWithCofounder] = useState(steps);
   const [hasCofounder, setHasCofounder] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const profileId = searchParams.get('profile_id'); // Get profile_id from URL query
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!profileId) {
+      router.push('/'); // Redirect if profileId is not available
+    }
+  }, [profileId, router]);
+
   const {
     register,
     formState: { errors },
@@ -172,7 +78,12 @@ const FormWizard = () => {
   const cofounderName = watch('cofounderName');
 
   const onSubmit = async (data) => {
-    console.log('Form Data:', data);
+    if (!profileId) {
+      console.error('Profile ID is missing');
+      return;
+    }
+    const formData = { ...data, profile_id: profileId }; // Include profile_id in the form data
+    console.log('Form Data:', formData);
     console.log('Current Step:', stepNumber);
 
     const isCofounderStep = hasCofounder && stepNumber === 3;
@@ -184,7 +95,7 @@ const FormWizard = () => {
     if (isLastStep) {
       setIsLoading(true);
       try {
-        console.log('Form data:', data);
+        console.log('Form data:', formData);
 
         // Upload files and store their URLs
         const uploadedFiles = {};
@@ -220,17 +131,18 @@ const FormWizard = () => {
         }
 
         // Insert data into the database
-        const companyId = await insertCompanyProfile(data, uploadedFiles);
-        await insertBusinessDetails(companyId, data, uploadedFiles);
-        await insertFundingInformation(companyId, data, uploadedFiles);
-        await insertContactInformation(companyId, data);
-        await insertFounderInformation(companyId, data);
+        const companyId = await insertCompanyProfile(formData, uploadedFiles);
+        await insertBusinessDetails(companyId, formData, uploadedFiles);
+        await insertFundingInformation(companyId, formData, uploadedFiles);
+        await insertContactInformation(companyId, formData);
+        await insertFounderInformation(companyId, formData);
 
         if (hasCofounder) {
-          await insertCofounderInformation(companyId, data);
+          await insertCofounderInformation(companyId, formData);
         }
 
         console.log('Data saved successfully');
+        router.push('/profile');
       } catch (error) {
         console.error('Error saving data:', error);
       } finally {
@@ -424,8 +336,7 @@ const FormWizard = () => {
                       name='companyLogo'
                       error={errors.companyLogo}
                       register={register}
-                    />{' '}
-                    {/* Added file input for company logo */}
+                    />
                   </div>
                 </div>
               )}

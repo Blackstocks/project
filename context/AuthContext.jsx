@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabaseclient';
 
@@ -23,7 +23,7 @@ const AuthProvider = ({ children }) => {
     checkSession();
 
     const { data: authListener } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      (_event, session) => {
         setUser(session?.user || null);
         setLoading(false);
       }
@@ -46,7 +46,6 @@ const AuthProvider = ({ children }) => {
       throw error;
     }
     setUser(data.user);
-    router.push('/profile');
     setLoading(false);
     return data;
   };
