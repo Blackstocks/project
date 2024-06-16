@@ -10,8 +10,15 @@ import Icon from '@/components/ui/Icon';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import Loading from '@/components/Loading';
-import { supabase } from '@/lib/supabaseclient';
+import {
+  handleFileUpload,
+  insertCompanyProfile,
+  insertBusinessDetails,
+  insertFundingInformation,
+  insertContactInformation,
+  insertFounderInformation,
+  insertCofounderInformation,
+} from '@/lib/actions/insertformdetails';
 
 const steps = [
   {
@@ -164,33 +171,6 @@ const FormWizard = () => {
 
   const cofounderName = watch('cofounderName');
 
-  const handleFileUpload = async (file, bucket, companyName, folder) => {
-    if (!file) {
-      console.log(`${folder} is not provided.`);
-      return null;
-    }
-
-    console.log(`Uploading ${folder}:`, file);
-
-    const filePath = `${companyName}/${folder}/${Date.now()}-${file.name}`;
-
-    try {
-      const { data, error } = await supabase.storage
-        .from(bucket)
-        .upload(filePath, file);
-
-      if (error) {
-        throw error;
-      }
-
-      console.log(`${folder} uploaded successfully:`, data.path);
-      return data.path; // Return the file path
-    } catch (error) {
-      console.error(`Error uploading ${folder}:`, error);
-      throw error;
-    }
-  };
-
   const onSubmit = async (data) => {
     console.log('Form Data:', data);
     console.log('Current Step:', stepNumber);
@@ -239,156 +219,15 @@ const FormWizard = () => {
           }
         }
 
-        // Insert company profile data
-        const { data: companyProfileData, error: companyProfileError } =
-          await supabase
-            .from('company_profile')
-            .insert([
-              {
-                company_name: data.companyName,
-                short_description: data.shortDescription,
-                incorporation_date: data.incorporationDate,
-                country: data.country,
-                state_city: data.stateCity,
-                office_address: data.officeAddress,
-                pin_code: data.pinCode,
-                company_website: data.companyWebsite,
-                linkedin_profile: data.linkedinProfile,
-                company_logo: uploadedFiles.companyLogo || '',
-              },
-            ])
-            .select();
+        // Insert data into the database
+        const companyId = await insertCompanyProfile(data, uploadedFiles);
+        await insertBusinessDetails(companyId, data, uploadedFiles);
+        await insertFundingInformation(companyId, data, uploadedFiles);
+        await insertContactInformation(companyId, data);
+        await insertFounderInformation(companyId, data);
 
-        console.log(
-          'Company Profile Response:',
-          companyProfileData,
-          companyProfileError
-        );
-
-        if (companyProfileError) {
-          throw companyProfileError;
-        }
-
-        const companyId = companyProfileData[0].id;
-
-        console.log('Company ID:', companyId);
-
-        // Insert business details along with file URLs
-        const { error: businessDetailsError } = await supabase
-          .from('business_details')
-          .insert([
-            {
-              company_id: companyId,
-              industry_sector: data.industrySector,
-              current_stage: data.currentStage,
-              current_traction: data.currentTraction,
-              target_audience: data.targetAudience,
-              team_size: data.teamSize,
-              usp_moat: data.uspMoat,
-              certificate_of_incorporation:
-                uploadedFiles.certificateOfIncorporation || '',
-              gst_certificate: uploadedFiles.gstCertificate || '',
-              startup_india_certificate:
-                uploadedFiles.startupIndiaCertificate || '',
-              due_diligence_report: uploadedFiles.dueDiligenceReport || '',
-              business_valuation_report:
-                uploadedFiles.businessValuationReport || '',
-              mis: uploadedFiles.mis || '',
-              pitch_deck: uploadedFiles.pitchDeck || '',
-              video_pitch: uploadedFiles.videoPitch || '',
-            },
-          ]);
-
-        console.log('Business Details Response:', businessDetailsError);
-
-        if (businessDetailsError) {
-          throw businessDetailsError;
-        }
-
-        // Insert funding information
-        const { error: fundingInformationError } = await supabase
-          .from('funding_information')
-          .insert([
-            {
-              company_id: companyId,
-              total_funding_ask: data.totalFundingAsk,
-              amount_committed: data.amountCommitted,
-              current_cap_table: uploadedFiles.currentCapTable || '',
-              government_grants: data.governmentGrants,
-              equity_split: data.equitySplit,
-              fund_utilization: data.fundUtilization,
-              arr: data.arr,
-              mrr: data.mrr,
-            },
-          ]);
-
-        console.log('Funding Information Response:', fundingInformationError);
-
-        if (fundingInformationError) {
-          throw fundingInformationError;
-        }
-
-        // Insert contact information
-        const { error: contactInformationError } = await supabase
-          .from('contact_information')
-          .insert([
-            {
-              company_id: companyId,
-              mobile: data.mobile,
-              business_description: data.businessDescription,
-            },
-          ]);
-
-        console.log('Contact Information Response:', contactInformationError);
-
-        if (contactInformationError) {
-          throw contactInformationError;
-        }
-
-        // Insert founder information
-        const { error: founderInformationError } = await supabase
-          .from('founder_information')
-          .insert([
-            {
-              company_id: companyId,
-              founder_name: data.founderName,
-              founder_email: data.founderEmail,
-              founder_mobile: data.founderMobile,
-              founder_linkedin: data.founderLinkedin,
-              degree_name: data.degreeName,
-              college_name: data.collegeName,
-              graduation_year: data.graduationYear,
-            },
-          ]);
-
-        console.log('Founder Information Response:', founderInformationError);
-
-        if (founderInformationError) {
-          throw founderInformationError;
-        }
-
-        // Insert co-founder information (if exists)
         if (hasCofounder) {
-          const { error: cofounderInformationError } = await supabase
-            .from('cofounder_information')
-            .insert([
-              {
-                company_id: companyId,
-                cofounder_name: data.cofounderName,
-                cofounder_email: data.cofounderEmail,
-                cofounder_mobile: data.cofounderMobile,
-                cofounder_linkedin: data.cofounderLinkedin,
-              },
-            ]);
-
-          console.log(
-            'Co-Founder Information Response:',
-            cofounderInformationError
-          );
-
-          if (cofounderInformationError) {
-            throw cofounderInformationError;
-          }
+          await insertCofounderInformation(companyId, data);
         }
 
         console.log('Data saved successfully');
