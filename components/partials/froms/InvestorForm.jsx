@@ -139,7 +139,7 @@ const InvestorSignupForm = () => {
             />
             <Select
               label='Are you a'
-              name='type'
+              name='usertype'
               options={[
                 { value: 'VC', label: 'VC' },
                 { value: 'Angel Fund', label: 'Angel Fund' },

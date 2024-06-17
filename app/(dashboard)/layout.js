@@ -135,10 +135,7 @@ export default function RootLayout({ children }) {
                 duration: 0.5,
               }}
             >
-              <Suspense fallback={<Loading />}>
-                <Breadcrumbs />
-                {children}
-              </Suspense>
+              <Suspense fallback={<Loading />}>{children}</Suspense>
             </motion.div>
           </div>
         </div>

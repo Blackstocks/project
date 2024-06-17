@@ -102,14 +102,14 @@ const Profile = () => {
                   {user?.name || 'User Name'}
                 </div>
                 <div className='text-sm font-light text-slate-600 dark:text-slate-400'>
-                  {user?.role || 'Role'}
+                  {details?.typeof || 'Role'}
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div className='grid grid-cols-12 gap-6'>
-          <div className='lg:col-span-12 col-span-12'>
+          <div className='lg:col-span-6 col-span-6'>
             <Card title='User Info'>
               <ul className='list space-y-8'>
                 <li className='flex space-x-3 rtl:space-x-reverse'>
@@ -155,8 +155,7 @@ const Profile = () => {
                       LOCATION
                     </div>
                     <div className='text-base text-slate-600 dark:text-slate-50'>
-                      {user?.location ||
-                        'Home# 320/N, Road# 71/B, Mohakhali, Dhaka-1207, Bangladesh'}
+                      {details.country}, {details.state_city}
                     </div>
                   </div>
                 </li>
@@ -165,7 +164,7 @@ const Profile = () => {
           </div>
 
           {details?.type === 'investor' && (
-            <div className='lg:col-span-12 col-span-12'>
+            <div className='lg:col-span-6 col-span-6'>
               <Card title='Investor Details'>
                 <ul className='list space-y-8'>
                   <li className='flex space-x-3 rtl:space-x-reverse'>
@@ -177,7 +176,7 @@ const Profile = () => {
                         INVESTOR TYPE
                       </div>
                       <div className='text-base text-slate-600 dark:text-slate-50'>
-                        {details.type}
+                        {details.typeof}
                       </div>
                     </div>
                   </li>
@@ -241,7 +240,7 @@ const Profile = () => {
           )}
 
           {details?.type === 'startup' && (
-            <div className='lg:col-span-12 col-span-12'>
+            <div className='lg:col-span-6 col-span-6'>
               <Card title='Startup Details'>
                 <ul className='list space-y-8'>
                   <li className='flex space-x-3 rtl:space-x-reverse'>
@@ -270,22 +269,10 @@ const Profile = () => {
                       </div>
                     </div>
                   </li>
+
                   <li className='flex space-x-3 rtl:space-x-reverse'>
                     <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                      <Icon icon='heroicons:location-marker' />
-                    </div>
-                    <div className='flex-1'>
-                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                        LOCATION
-                      </div>
-                      <div className='text-base text-slate-600 dark:text-slate-50'>
-                        {details.country}, {details.state_city}
-                      </div>
-                    </div>
-                  </li>
-                  <li className='flex space-x-3 rtl:space-x-reverse'>
-                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                      <Icon icon='heroicons:office-building' />
+                      <Icon icon='heroicons:building-office' />
                     </div>
                     <div className='flex-1'>
                       <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
@@ -298,7 +285,7 @@ const Profile = () => {
                   </li>
                   <li className='flex space-x-3 rtl:space-x-reverse'>
                     <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                      <Icon icon='heroicons:globe' />
+                      <Icon icon='heroicons:globe-alt' />
                     </div>
                     <div className='flex-1'>
                       <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
@@ -321,11 +308,11 @@ const Profile = () => {
                         BUSINESS DESCRIPTION
                       </div>
                       <div className='text-base text-slate-600 dark:text-slate-50'>
-                        {details.business_description}
+                        {details.short_description}
                       </div>
                     </div>
                   </li>
-                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                  {/* <li className='flex space-x-3 rtl:space-x-reverse'>
                     <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
                       <Icon icon='heroicons:light-bulb' />
                     </div>
@@ -337,7 +324,7 @@ const Profile = () => {
                         {details.usp_moat}
                       </div>
                     </div>
-                  </li>
+                  </li> */}
                 </ul>
               </Card>
             </div>

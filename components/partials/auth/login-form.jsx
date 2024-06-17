@@ -101,7 +101,7 @@ const LoginForm = () => {
         }
       } else if (profile.user_type === 'startup') {
         const { data: startupDetails, error: startupError } = await supabase
-          .from('startup_form')
+          .from('company_profile')
           .select('*')
           .eq('profile_id', userId)
           .single();
