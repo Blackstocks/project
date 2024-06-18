@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Textinput from '@/components/ui/Textinput';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -31,20 +31,6 @@ const LoginForm = () => {
 
   const router = useRouter();
   const { login } = useAuth();
-
-  useEffect(() => {
-    const checkIfLoggedIn = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (user) {
-        router.push('/profile');
-      }
-    };
-
-    checkIfLoggedIn();
-  }, [router]);
 
   const onSubmit = async (data) => {
     try {
@@ -90,7 +76,7 @@ const LoginForm = () => {
 
       // Check if the form has already been filled
       if (profile.user_type === 'investor') {
-        const { data: investorDetails, error: investorError } = await supabase
+        const { data: investorDetails } = await supabase
           .from('investor_signup')
           .select('*')
           .eq('profile_id', userId)
@@ -100,7 +86,7 @@ const LoginForm = () => {
           formFilled = true;
         }
       } else if (profile.user_type === 'startup') {
-        const { data: startupDetails, error: startupError } = await supabase
+        const { data: startupDetails } = await supabase
           .from('company_profile')
           .select('*')
           .eq('profile_id', userId)
