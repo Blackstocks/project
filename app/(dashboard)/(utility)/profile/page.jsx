@@ -84,7 +84,7 @@ const Profile = () => {
                 <div className='md:h-[186px] md:w-[186px] h-[140px] w-[140px] md:ml-0 md:mr-0 ml-auto mr-auto md:mb-0 mb-4 rounded-full ring-4 ring-slate-100 relative'>
                   <img
                     src={
-                      user?.profile_image || '/assets/images/users/user-1.jpg'
+                      details?.company_logo || '/assets/images/users/user-1.jpg'
                     }
                     alt=''
                     className='w-full h-full object-cover rounded-full'
@@ -182,7 +182,7 @@ const Profile = () => {
                   </li>
                   <li className='flex space-x-3 rtl:space-x-reverse'>
                     <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                      <Icon icon='heroicons:cash' />
+                      <Icon icon='heroicons:credit-card' />
                     </div>
                     <div className='flex-1'>
                       <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
