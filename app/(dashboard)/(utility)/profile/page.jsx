@@ -4,73 +4,13 @@ import { supabase } from '@/lib/supabaseclient';
 import Link from 'next/link';
 import Icon from '@/components/ui/Icon';
 import Card from '@/components/ui/Card';
+import Loading from '@/components/Loading';
+import useUserDetails from '@/hooks/useUserDetails';
 
 const Profile = () => {
-  const [user, setUser] = useState(null);
-  const [details, setDetails] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchUserDetails = async () => {
-      const {
-        data: { user },
-        error,
-      } = await supabase.auth.getUser();
-
-      if (error) {
-        console.error('Error fetching user:', error);
-        return;
-      }
-
-      if (user) {
-        const { data: profile, error: profileError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-
-        if (profileError) {
-          console.error('Error fetching profile:', profileError);
-        } else {
-          setUser(profile);
-
-          // Fetch relevant details based on user type
-          if (profile.user_type === 'investor') {
-            const { data: investor, error: investorError } = await supabase
-              .from('investor_signup')
-              .select('*')
-              .eq('profile_id', user.id)
-              .single();
-
-            if (investorError) {
-              console.error('Error fetching investor details:', investorError);
-            } else {
-              setDetails({ ...investor, type: 'investor' });
-            }
-          } else if (profile.user_type === 'startup') {
-            const { data: startup, error: startupError } = await supabase
-              .from('company_profile')
-              .select('*')
-              .eq('profile_id', user.id)
-              .single();
-
-            if (startupError) {
-              console.error('Error fetching startup details:', startupError);
-            } else {
-              setDetails({ ...startup, type: 'startup' });
-            }
-          }
-        }
-      }
-
-      setLoading(false);
-    };
-
-    fetchUserDetails();
-  }, []);
-
+  const { user, details, loading } = useUserDetails();
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   return (
@@ -154,9 +94,11 @@ const Profile = () => {
                     <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
                       LOCATION
                     </div>
-                    <div className='text-base text-slate-600 dark:text-slate-50'>
-                      {details.country}, {details.state_city}
-                    </div>
+                    {details?.type === 'startup' && (
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {details.country}, {details.state_city}
+                      </div>
+                    )}
                   </div>
                 </li>
               </ul>

@@ -4,14 +4,14 @@ export const menuItems = [
     title: 'menu',
   },
   {
-    title: 'Profile',
-    icon: 'heroicons-outline:user-circle',
-    link: 'profile',
-  },
-  {
     title: 'Dashboard',
     icon: 'heroicons-outline:home',
     link: 'dashboard',
+  },
+  {
+    title: 'Profile',
+    icon: 'heroicons-outline:user-circle',
+    link: 'profile',
   },
   {
     title: 'Resources',
