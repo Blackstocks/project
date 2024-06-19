@@ -1,12 +1,12 @@
-import React from "react";
-import dynamic from "next/dynamic";
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+import React from 'react';
+import dynamic from 'next/dynamic';
+const Chart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-import useDarkMode from "@/hooks/useDarkMode";
+import useDarkMode from '@/hooks/useDarkMode';
 
 const ProfitChart = ({
-  className = "bg-slate-50 dark:bg-slate-900 rounded pt-3 px-4",
-  color = "#4669FA",
+  className = 'bg-slate-50 dark:bg-slate-900 rounded pt-3 px-4',
+  color = '#4669FA',
 }) => {
   const [isDark] = useDarkMode();
   const series = [
@@ -29,7 +29,7 @@ const ProfitChart = ({
     },
     stroke: {
       width: [2],
-      curve: "straight",
+      curve: 'straight',
       dashArray: [0, 8, 5],
     },
     dataLabels: {
@@ -41,7 +41,7 @@ const ProfitChart = ({
       colors: color,
       strokeColors: color,
       strokeWidth: 2,
-      shape: "circle",
+      shape: 'circle',
       radius: 2,
       hover: {
         sizeOffset: 1,
@@ -65,9 +65,9 @@ const ProfitChart = ({
     },
     grid: {
       show: true,
-      borderColor: isDark ? "#334155" : "#e2e8f0",
+      borderColor: isDark ? '#334155' : '#e2e8f0',
       strokeDashArray: 5,
-      position: "back",
+      position: 'back',
       xaxis: {
         lines: {
           show: true,
@@ -83,18 +83,24 @@ const ProfitChart = ({
   };
   return (
     <div className={className}>
-      <div className="text-sm text-slate-600 dark:text-slate-300 mb-[6px]">
+      <div className='text-sm text-slate-600 dark:text-slate-300 mb-[6px]'>
         Profit
       </div>
-      <div className="text-lg text-slate-900 dark:text-white font-medium mb-[6px]">
+      <div className='text-lg text-slate-900 dark:text-white font-medium mb-[6px]'>
         654k
       </div>
-      <div className="font-normal text-xs text-slate-600 dark:text-slate-300">
-        <span className="text-primary-500">+02% </span>
+      <div className='font-normal text-xs text-slate-600 dark:text-slate-300'>
+        <span className='text-primary-500'>+02% </span>
         From last Week
       </div>
-      <div className="mt-4">
-        <Chart type="line" height="44" options={options} series={series} width="100%" />
+      <div className='mt-4'>
+        <Chart
+          type='line'
+          height='44'
+          options={options}
+          series={series}
+          width='100%'
+        />
       </div>
     </div>
   );

@@ -6,10 +6,10 @@
 }
 
 .card-header {
-  @apply flex items-center justify-between px-6 pt-6;
+  @apply flex items-center justify-center px-6 pt-4;
 }
 .card-header:not(.no-border) {
-  @apply border-b border-slate-200 dark:border-slate-700 pb-5;
+  @apply border-b border-slate-200 dark:border-slate-700 pb-2;
 }
 
 .card-footer {

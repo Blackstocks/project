@@ -16,102 +16,106 @@ import VisitorRadar from '@/components/partials/widget/chart/visitor-radar';
 import MostSales2 from '@/components/partials/widget/most-sales2';
 import Products from '@/components/partials/widget/products';
 import HomeBredCurbs from '@/components/partials/HomeBredCurbs';
+import Card_D from '@/components/card_dashboard';
+import Loading from '@/components/Loading';
+import useUserDetails from '@/hooks/useUserDetails';
 
 const Ecommerce = () => {
-  const [filterMap, setFilterMap] = useState('usa');
+  const { user, details, loading } = useUserDetails();
+  if (loading) {
+    return <Loading />;
+  }
   return (
     <div>
-      {/* <HomeBredCurbs title='Ecommerce' /> */}
-      <div className='grid grid-cols-12 gap-5 mb-5'>
-        <div className='2xl:col-span-3 lg:col-span-4 col-span-12'>
-          <ImageBlock2 />
-        </div>
-        <div className='2xl:col-span-9 lg:col-span-8 col-span-12'>
-          {/* <div className='grid md:grid-cols-3 grid-cols-1 gap-4'>
-            <GroupChart2 />
-          </div> */}
-        </div>
-      </div>
-      <div className='grid grid-cols-12 gap-5'>
-        <div className='2xl:col-span-8 lg:col-span-7 col-span-12'>
-          <Card>
-            <div className='legend-ring'>
-              <RevenueBarChart height={420} />
-            </div>
-          </Card>
-        </div>
-        <div className='2xl:col-span-4 lg:col-span-5 col-span-12'>
-          <Card title='Statistic' headerslot={<SelectMonth />}>
-            <div className='grid md:grid-cols-2 grid-cols-1 gap-5'>
-              <OrderChart />
-              <ProfitChart />
-              <div className='md:col-span-2'>
-                <EarningChart />
+      {details?.type === 'startup' && (
+        <div className='grid grid-cols-12 gap-5'>
+          <div className='2xl:col-span-8 lg:col-span-7 col-span-12'>
+            <Card title='Investment Readines'>
+              <div className='grid md:grid-cols-2 grid-cols-2 gap-5'>
+                <div className='grid md:grid-cols-2 grid-cols-2 gap-5'>
+                  {/* <OrderChart /> */}
+                  <Card_D
+                    title='Avail Startup India Certificate'
+                    text='download'
+                  />
+                  <Card_D title='GST Certificate' text='download' />
+                  <Card_D title='Intellectual Property' text='Learn More' />
+                  <Card_D title='Virtual Office Support' text='Learn More' />
+                </div>
+                <Card_D title='CapTable Management' text='Learn More' />
               </div>
-            </div>
-          </Card>
-        </div>
-        <div className='xl:col-span-6 col-span-12'>
-          <Card title='Customer' headerslot={<SelectMonth />}>
-            <Customer />
-          </Card>
-        </div>
-        <div className='xl:col-span-6 col-span-12'>
-          <Card title='Recent Orders' headerslot={<SelectMonth />} noborder>
-            <RecentOrderTable />
-          </Card>
-        </div>
-        <div className='xl:col-span-8 lg:col-span-7 col-span-12'>
-          <Card title='Visitors Report' headerslot={<SelectMonth />}>
-            <BasicArea />
-          </Card>
-        </div>
-        <div className='xl:col-span-4 lg:col-span-5 col-span-12'>
-          <Card title='Visitors By Gender' headerslot={<SelectMonth />}>
-            <VisitorRadar />
-          </Card>
-        </div>
-        <div className='xl:col-span-6 col-span-12'>
-          <Card
-            title='Most Sales'
-            headerslot={
-              <div className='border border-slate-200 dark:border-slate-700 dark:bg-slate-900 rounded p-1 flex items-center'>
-                <span
-                  className={` flex-1 text-sm font-normal px-3 py-1 transition-all duration-150 rounded cursor-pointer
-                ${
-                  filterMap === 'global'
-                    ? 'bg-slate-900 text-white dark:bg-slate-700 dark:text-slate-300'
-                    : 'dark:text-slate-300'
-                }  
-                `}
-                  onClick={() => setFilterMap('global')}
-                >
-                  Global
-                </span>
-                <span
-                  className={` flex-1 text-sm font-normal px-3 py-1 rounded transition-all duration-150 cursor-pointer
-                  ${
-                    filterMap === 'usa'
-                      ? 'bg-slate-900 text-white dark:bg-slate-700 dark:text-slate-300'
-                      : 'dark:text-slate-300'
-                  }
-              `}
-                  onClick={() => setFilterMap('usa')}
-                >
-                  USA
-                </span>
+            </Card>
+          </div>
+          <div className='2xl:col-span-4 lg:col-span-5 col-span-12 gap-5'>
+            <Card>
+              <Card_D title='DIY Pitch Deck' text='Learn More' />
+              <Card_D title='Financial Insights' text='Learn More' />
+              <Card_D title='Connect with Incubators' text='Learn More' />
+            </Card>
+          </div>
+          <div className='2xl:col-span-8 lg:col-span-7 col-span-12 gap-5'>
+            <Card title='Fundraising'>
+              <div className='grid md:grid-cols-2 grid-cols-2 gap-5'>
+                {/* <OrderChart /> */}
+                <Card_D title='Debt Fundraising' text='Learn More' />
+                <Card_D title='Equity Fundraising' text='Learn More' />
+                <Card_D title='M&A' text='Learn More' />
+
+                <Card_D title='Valuate My Business' text='Learn More' />
+                <Card_D title='Investment Banking Support' text='Learn More' />
+                <Card_D
+                  title='Fundraising through secondary shares'
+                  text='Learn More'
+                />
               </div>
-            }
-          >
-            <MostSales2 filterMap={filterMap} />
-          </Card>
+            </Card>
+          </div>
+          <div className='2xl:col-span-4 lg:col-span-5 col-span-12'>
+            <Card title='Legal Help Desk'>
+              <Card_D title='Contracts and Agreements' text='Learn More' />
+              <Card_D title='Review my Termsheet' text='Learn More' />
+              <Card_D title='Review my SHA' text='Learn More' />
+            </Card>
+          </div>
         </div>
-        <div className='xl:col-span-6 col-span-12'>
-          <Card title='Best selling products' headerslot={<SelectMonth />}>
-            <Products />
-          </Card>
+      )}
+      {details?.type === 'investor' && (
+        <div className='grid grid-cols-12 gap-5'>
+          <div className='2xl:col-span-8 lg:col-span-7 col-span-12'>
+            <Card>
+              <div className='grid md:grid-cols-1 grid-cols-1 gap-5'>
+                <Card_D title='Global Dealflow' text='Learn More' />
+                <Card_D title='Valuate a startup' text='Learn More' />
+              </div>
+            </Card>
+          </div>
+          <div className='2xl:col-span-4 lg:col-span-5 col-span-12 gap-5'>
+            <Card title='Syndicate'>
+              <Card_D title='Create a Syndicate' text='Learn More' />
+              <Card_D title='Join a syndicate' text='Learn More' />
+            </Card>
+          </div>
+          <div className='2xl:col-span-8 lg:col-span-7 col-span-12 gap-5'>
+            <Card title='Portfolio Management'>
+              <div className='grid md:grid-cols-2 grid-cols-2 gap-5'>
+                <Card_D title='Follow your investment' text='Learn More' />
+                <Card_D
+                  title='Sell my shares (Secondary Shares)'
+                  text='Learn More'
+                />
+                <Card_D title='Exit Strategy' text='Learn More' />
+              </div>
+            </Card>
+          </div>
+          <div className='2xl:col-span-4 lg:col-span-5 col-span-12'>
+            <Card title='Post Term Sheet' titleClass='text-center'>
+              <Card_D title='Valuate a startup' text='Learn More' />
+              <Card_D title='Due-Diligence Support' text='Learn More' />
+              <Card_D title='SHA Support' text='Learn More' />
+            </Card>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
