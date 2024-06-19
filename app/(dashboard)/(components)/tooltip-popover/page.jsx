@@ -1,208 +1,208 @@
-"use client";
+'use client';
 
-import Tooltip from "@/components/ui/Tooltip";
-import Card from "@/components/ui/Card";
+import Tooltip from '@/components/ui/Tooltip';
+import Card from '@/components/ui/Card';
 
 const TooltipPage = () => {
   return (
-    <div className="grid xl:grid-cols-2 grid-cols-1 gap-5">
-      <Card title="Tooltip Position">
-        <p className="dark:text-slate-300 text-slate-600 text-base mb-4">
+    <div className='grid xl:grid-cols-2 grid-cols-1 gap-5'>
+      <Card title='Tooltip Position'>
+        <p className='dark:text-slate-300 text-slate-600 text-base mb-4'>
           available options for positioning:
-          <code className="font-Inter p-1 rounded bg-[#E0EAFF] dark:bg-slate-700 text-slate-900 dark:text-slate-300 text-sm">
+          <code className='font-Inter p-1 rounded bg-[#E0EAFF] dark:bg-slate-700 text-slate-900 dark:text-slate-300 text-sm'>
             top, top-start, top-end, bottom, bottom-start, bottom-end, left,
             left-start, left-end, right, right-start, right-end
           </code>
         </p>
-        <div className="space-xy-5 flex flex-wrap">
+        <div className='space-xy-5 flex flex-wrap'>
           <Tooltip
-            title="Tooltip on top"
-            content="Tooltip on top!"
-            placement="top"
-            className="btn btn-outline-dark "
-            theme="primary"
+            title='Tooltip on top'
+            content='Tooltip on top!'
+            placement='top'
+            className='btn btn-outline-dark '
+            theme='primary'
             arrow
           />
           <Tooltip
-            title="Tooltip on Right"
-            content="Tooltip on Right!"
-            placement="right"
-            className="btn btn-outline-dark"
+            title='Tooltip on Right'
+            content='Tooltip on Right!'
+            placement='right'
+            className='btn btn-outline-dark'
             arrow
           />
           <Tooltip
-            title="Tooltip on Left"
-            content="Tooltip on Left!"
-            placement="left"
-            className="btn btn-outline-dark"
+            title='Tooltip on Left'
+            content='Tooltip on Left!'
+            placement='left'
+            className='btn btn-outline-dark'
             arrow
           />
           <Tooltip
-            title="Tooltip on bottom"
-            content="Tooltip on bottom!"
-            placement="bottom"
-            className="btn btn-outline-dark"
+            title='Tooltip on bottom'
+            content='Tooltip on bottom!'
+            placement='bottom'
+            className='btn btn-outline-dark'
             arrow
           />
         </div>
       </Card>
-      <Card title="Theme style">
-        <div className="space-xy-5 flex flex-wrap">
+      <Card title='Theme style'>
+        <div className='space-xy-5 flex flex-wrap'>
           <Tooltip
-            title="primary"
-            content="primary style"
-            placement="top"
-            className="btn btn-outline-primary "
+            title='primary'
+            content='primary style'
+            placement='top'
+            className='btn btn-outline-primary '
             arrow
-            theme="primary"
+            theme='primary'
           />
           <Tooltip
-            title="secondary"
-            content="secondary style"
-            placement="top"
-            className="btn btn-outline-secondary "
+            title='secondary'
+            content='secondary style'
+            placement='top'
+            className='btn btn-outline-secondary '
             arrow
-            theme="secondary"
+            theme='secondary'
           />
           <Tooltip
-            title="success"
-            content="success style"
-            placement="top"
-            className="btn btn-outline-success"
+            title='success'
+            content='success style'
+            placement='top'
+            className='btn btn-outline-success'
             arrow
-            theme="success"
+            theme='success'
           />
           <Tooltip
-            title="info"
-            content="info style"
-            placement="top"
-            className="btn btn-outline-info "
+            title='info'
+            content='info style'
+            placement='top'
+            className='btn btn-outline-info '
             arrow
-            theme="info"
+            theme='info'
           />
           <Tooltip
-            title="warning"
-            content="warning style"
-            placement="top"
-            className="btn btn-outline-warning "
+            title='warning'
+            content='warning style'
+            placement='top'
+            className='btn btn-outline-warning '
             arrow
-            theme="warning"
+            theme='warning'
           />
           <Tooltip
-            title="danger"
-            content="danger style"
-            placement="top"
-            className="btn btn-outline-danger "
+            title='danger'
+            content='danger style'
+            placement='top'
+            className='btn btn-outline-danger '
             arrow
-            theme="danger"
+            theme='danger'
           />
           <Tooltip
-            title="dark"
-            content="Dark style"
-            placement="top"
-            className="btn btn-outline-dark "
+            title='dark'
+            content='Dark style'
+            placement='top'
+            className='btn btn-outline-dark '
             arrow
-            theme="dark"
+            theme='dark'
           />
           <Tooltip
-            title="light"
-            content="Light style"
-            placement="top"
-            className="btn btn-outline-light "
+            title='light'
+            content='Light style'
+            placement='top'
+            className='btn btn-outline-light '
             arrow
-            theme="light"
+            theme='light'
           />
         </div>
       </Card>
-      <Card title="Animations">
-        <p className="dark:text-slate-300 text-slate-600 text-base mb-4">
+      <Card title='Animations'>
+        <p className='dark:text-slate-300 text-slate-600 text-base mb-4'>
           available Animations:
-          <code className="font-Inter p-1 rounded bg-[#E0EAFF] dark:bg-slate-700 text-slate-900 dark:text-slate-300 text-sm">
+          <code className='font-Inter p-1 rounded bg-[#E0EAFF] dark:bg-slate-700 text-slate-900 dark:text-slate-300 text-sm'>
             scale, scale-subtl, scale-extreme, perspective-extrem,
             perspective-subtle, perspective, shift-away-extreme
             shift-away-subtle, shift-away.css,
             shift-toward-extreme,shift-toward-subtle, shift-toward.
           </code>
         </p>
-        <div className="space-xy-5 flex flex-wrap">
+        <div className='space-xy-5 flex flex-wrap'>
           <Tooltip
-            title="Shift-away"
-            content="Shift-away"
-            placement="top"
-            className="btn btn-outline-dark "
+            title='Shift-away'
+            content='Shift-away'
+            placement='top'
+            className='btn btn-outline-dark '
             arrow
-            animation="shift-away"
+            animation='shift-away'
           />
           <Tooltip
-            title="Shift-toward"
-            content="Shift-toward"
-            placement="top"
-            className="btn btn-outline-dark "
+            title='Shift-toward'
+            content='Shift-toward'
+            placement='top'
+            className='btn btn-outline-dark '
             arrow
-            animation="shift-toward"
+            animation='shift-toward'
           />
           <Tooltip
-            title="Scale"
-            content="Scale"
-            placement="top"
-            className="btn btn-outline-dark "
+            title='Scale'
+            content='Scale'
+            placement='top'
+            className='btn btn-outline-dark '
             arrow
-            animation="scale"
+            animation='scale'
           />
           <Tooltip
-            title="Fade"
-            content="Fade"
-            placement="top"
-            className="btn btn-outline-dark "
+            title='Fade'
+            content='Fade'
+            placement='top'
+            className='btn btn-outline-dark '
             arrow
-            animation="fade"
+            animation='fade'
           />
           <Tooltip
-            title="Perspective"
-            content="Perspective"
-            placement="top"
-            className="btn btn-outline-dark "
+            title='Perspective'
+            content='Perspective'
+            placement='top'
+            className='btn btn-outline-dark '
             arrow
-            animation="Perspective"
+            animation='Perspective'
           />
         </div>
       </Card>
-      <Card title="Triggers">
-        <div className="space-xy-5 flex flex-wrap">
+      <Card title='Triggers'>
+        <div className='space-xy-5 flex flex-wrap'>
           <Tooltip
-            title="Mouseenter"
-            content="Mouseenter"
-            placement="top"
-            className="btn btn-outline-dark "
+            title='Mouseenter'
+            content='Mouseenter'
+            placement='top'
+            className='btn btn-outline-dark '
             arrow
-            trigger="mouseenter"
+            trigger='mouseenter'
           />
           <Tooltip
-            title="Click"
-            content="Click"
-            placement="top"
-            className="btn btn-outline-dark "
+            title='Click'
+            content='Click'
+            placement='top'
+            className='btn btn-outline-dark '
             arrow
-            trigger="click"
+            trigger='click'
           />
         </div>
       </Card>
 
-      <div className="xl:col-span-2">
-        <Card title="Popover Positions">
-          <div className="space-xy-5 flex flex-wrap">
+      <div className='xl:col-span-2'>
+        <Card title='Popover Positions'>
+          <div className='space-xy-5 flex flex-wrap'>
             <Tooltip
-              title="Popover Top"
-              placement="top"
-              className="btn btn-outline-dark"
+              title='Popover Top'
+              placement='top'
+              className='btn btn-outline-dark'
               arrow
               allowHTML
               interactive
-              theme="custom-light"
-              maxWidth="320px"
+              theme='custom-light'
+              maxWidth='320px'
               content={
-                <div className="dark:text-slate-300 text-slate-600 text-sm">
-                  <h1 className="text-base bg-slate-900 dark:bg-slate-600 dark:bg-opacity-70 text-white rounded-t px-[9px] mt-[-5px] mx-[-9px] mb-3 py-2">
+                <div className='dark:text-slate-300 text-slate-600 text-sm'>
+                  <h1 className='text-base bg-slate-900 dark:bg-slate-600 dark:bg-opacity-70 text-white rounded-t px-[9px] mt-[-5px] mx-[-9px] mb-3 py-2'>
                     Popover Top
                   </h1>
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -213,17 +213,17 @@ const TooltipPage = () => {
               }
             ></Tooltip>
             <Tooltip
-              title="Popover bottom"
-              placement="bottom"
-              className="btn btn-outline-dark"
+              title='Popover bottom'
+              placement='bottom'
+              className='btn btn-outline-dark'
               arrow
               allowHTML
               interactive
-              theme="custom-light"
-              maxWidth="320px"
+              theme='custom-light'
+              maxWidth='320px'
               content={
-                <div className="dark:text-slate-300 text-slate-600 text-sm">
-                  <h1 className="text-base bg-slate-900 dark:bg-slate-600 dark:bg-opacity-70 text-white rounded-t px-[9px] mt-[-5px] mx-[-9px] mb-3 py-2">
+                <div className='dark:text-slate-300 text-slate-600 text-sm'>
+                  <h1 className='text-base bg-slate-900 dark:bg-slate-600 dark:bg-opacity-70 text-white rounded-t px-[9px] mt-[-5px] mx-[-9px] mb-3 py-2'>
                     Popover Bottom
                   </h1>
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -234,17 +234,17 @@ const TooltipPage = () => {
               }
             />
             <Tooltip
-              title="Popover left"
-              placement="left"
-              className="btn btn-outline-dark"
+              title='Popover left'
+              placement='left'
+              className='btn btn-outline-dark'
               arrow
               allowHTML
               interactive
-              theme="custom-light"
-              maxWidth="320px"
+              theme='custom-light'
+              maxWidth='320px'
               content={
-                <div className="dark:text-slate-300 text-slate-600 text-sm">
-                  <h1 className="text-base bg-slate-900 dark:bg-slate-600 dark:bg-opacity-70 text-white rounded-t px-[9px] mt-[-5px] mx-[-9px] mb-3 py-2">
+                <div className='dark:text-slate-300 text-slate-600 text-sm'>
+                  <h1 className='text-base bg-slate-900 dark:bg-slate-600 dark:bg-opacity-70 text-white rounded-t px-[9px] mt-[-5px] mx-[-9px] mb-3 py-2'>
                     Popover Left
                   </h1>
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -255,17 +255,17 @@ const TooltipPage = () => {
               }
             />
             <Tooltip
-              title="Popover right"
-              placement="right"
-              className="btn btn-outline-dark"
+              title='Popover right'
+              placement='right'
+              className='btn btn-outline-dark'
               arrow
               allowHTML
               interactive
-              theme="custom-light"
-              maxWidth="320px"
+              theme='custom-light'
+              maxWidth='320px'
               content={
-                <div className="dark:text-slate-300 text-slate-600 text-sm">
-                  <h1 className="text-base bg-slate-900 dark:bg-slate-600 dark:bg-opacity-70 text-white rounded-t px-[9px] mt-[-5px] mx-[-9px] mb-3 py-2">
+                <div className='dark:text-slate-300 text-slate-600 text-sm'>
+                  <h1 className='text-base bg-slate-900 dark:bg-slate-600 dark:bg-opacity-70 text-white rounded-t px-[9px] mt-[-5px] mx-[-9px] mb-3 py-2'>
                     Popover Right
                   </h1>
                   Lorem ipsum dolor sit amet consectetur adipisicing elit.
@@ -278,13 +278,13 @@ const TooltipPage = () => {
           </div>
         </Card>
       </div>
-      <Card title="Interactive">
-        <div className="space-xy-5 flex flex-wrap">
+      <Card title='Interactive'>
+        <div className='space-xy-5 flex flex-wrap'>
           <Tooltip
-            title="Interactive"
-            content="Interactive tooltip"
-            placement="top"
-            className="btn btn-outline-dark "
+            title='Interactive'
+            content='Interactive tooltip'
+            placement='top'
+            className='btn btn-outline-dark '
             arrow
             interactive
           />
