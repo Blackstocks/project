@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabaseclient'; // Make sure to import your Supabase client
+import { supabase } from '@/lib/supabaseclient';
 
 const useUserDetails = () => {
   const [user, setUser] = useState(null);
@@ -30,7 +30,6 @@ const useUserDetails = () => {
         } else {
           setUser(profile);
 
-          // Fetch relevant details based on user type
           if (profile.user_type === 'investor') {
             const { data: investor, error: investorError } = await supabase
               .from('investor_signup')
@@ -44,17 +43,68 @@ const useUserDetails = () => {
               setDetails({ ...investor, type: 'investor' });
             }
           } else if (profile.user_type === 'startup') {
-            const { data: startup, error: startupError } = await supabase
-              .from('company_profile')
-              .select('*')
-              .eq('profile_id', user.id)
-              .single();
+            const fetchStartupDetails = async () => {
+              try {
+                const { data: startup, error: startupError } = await supabase
+                  .from('company_profile')
+                  .select('*')
+                  .eq('profile_id', user.id)
+                  .single();
 
-            if (startupError) {
-              console.error('Error fetching startup details:', startupError);
-            } else {
-              setDetails({ ...startup, type: 'startup' });
-            }
+                if (startupError) throw startupError;
+
+                const companyId = startup.id;
+
+                const { data: businessDetails, error: businessError } =
+                  await supabase
+                    .from('business_details')
+                    .select('*')
+                    .eq('company_id', companyId)
+                    .single();
+
+                if (businessError) throw businessError;
+
+                const { data: founderInformation, error: founderError } =
+                  await supabase
+                    .from('founder_information')
+                    .select('*')
+                    .eq('company_id', companyId)
+                    .single();
+
+                if (founderError) throw founderError;
+
+                const { data: cofounderInformation, error: cofounderError } =
+                  await supabase
+                    .from('cofounder_information')
+                    .select('*')
+                    .eq('company_id', companyId)
+                    .single();
+
+                if (cofounderError) throw cofounderError;
+
+                const { data: fundingInformation, error: fundingError } =
+                  await supabase
+                    .from('funding_information')
+                    .select('*')
+                    .eq('company_id', companyId)
+                    .single();
+
+                if (fundingError) throw fundingError;
+
+                setDetails({
+                  ...startup,
+                  businessDetails,
+                  founderInformation,
+                  cofounderInformation,
+                  fundingInformation,
+                  type: 'startup',
+                });
+              } catch (error) {
+                console.error('Error fetching startup details:', error);
+              }
+            };
+
+            fetchStartupDetails();
           }
         }
       }
