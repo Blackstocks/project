@@ -1,11 +1,11 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabaseclient';
 import Link from 'next/link';
 import Icon from '@/components/ui/Icon';
 import Card from '@/components/ui/Card';
 import Loading from '@/components/Loading';
 import useUserDetails from '@/hooks/useUserDetails';
+import VerticalNavTabs from '@/components/profileSideBar';
 
 const Profile = () => {
   const { user, details, loading } = useUserDetails();
@@ -48,61 +48,66 @@ const Profile = () => {
             </div>
           </div>
         </div>
+        {details?.type === 'startup' && <VerticalNavTabs />}
         <div className='grid grid-cols-12 gap-6'>
           <div className='lg:col-span-6 col-span-6'>
-            <Card title='User Info'>
-              <ul className='list space-y-8'>
-                <li className='flex space-x-3 rtl:space-x-reverse'>
-                  <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                    <Icon icon='heroicons:envelope' />
-                  </div>
-                  <div className='flex-1'>
-                    <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                      EMAIL
+            {details?.type === 'investor' && (
+              <Card title='User Info'>
+                <ul className='list space-y-8'>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:envelope' />
                     </div>
-                    <a
-                      href={`mailto:${user?.email || 'info-500@dashcode.com'}`}
-                      className='text-base text-slate-600 dark:text-slate-50'
-                    >
-                      {user?.email || 'info-500@dashcode.com'}
-                    </a>
-                  </div>
-                </li>
-
-                <li className='flex space-x-3 rtl:space-x-reverse'>
-                  <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                    <Icon icon='heroicons:phone-arrow-up-right' />
-                  </div>
-                  <div className='flex-1'>
-                    <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                      PHONE
-                    </div>
-                    <a
-                      href={`tel:${user?.mobile || '0189749676767'}`}
-                      className='text-base text-slate-600 dark:text-slate-50'
-                    >
-                      {user?.mobile || '+1-202-555-0151'}
-                    </a>
-                  </div>
-                </li>
-
-                <li className='flex space-x-3 rtl:space-x-reverse'>
-                  <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                    <Icon icon='heroicons:map' />
-                  </div>
-                  <div className='flex-1'>
-                    <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                      LOCATION
-                    </div>
-                    {details?.type === 'startup' && (
-                      <div className='text-base text-slate-600 dark:text-slate-50'>
-                        {details.country}, {details.state_city}
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        EMAIL
                       </div>
-                    )}
-                  </div>
-                </li>
-              </ul>
-            </Card>
+                      <a
+                        href={`mailto:${
+                          user?.email || 'info-500@dashcode.com'
+                        }`}
+                        className='text-base text-slate-600 dark:text-slate-50'
+                      >
+                        {user?.email || 'info-500@dashcode.com'}
+                      </a>
+                    </div>
+                  </li>
+
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:phone-arrow-up-right' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        PHONE
+                      </div>
+                      <a
+                        href={`tel:${user?.mobile || '0189749676767'}`}
+                        className='text-base text-slate-600 dark:text-slate-50'
+                      >
+                        {user?.mobile || '+1-202-555-0151'}
+                      </a>
+                    </div>
+                  </li>
+
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:map' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        LOCATION
+                      </div>
+                      {details?.type === 'startup' && (
+                        <div className='text-base text-slate-600 dark:text-slate-50'>
+                          {details.country}, {details.state_city}
+                        </div>
+                      )}
+                    </div>
+                  </li>
+                </ul>
+              </Card>
+            )}
           </div>
 
           {details?.type === 'investor' && (
@@ -176,97 +181,6 @@ const Profile = () => {
                       </div>
                     </div>
                   </li>
-                </ul>
-              </Card>
-            </div>
-          )}
-
-          {details?.type === 'startup' && (
-            <div className='lg:col-span-6 col-span-6'>
-              <Card title='Startup Details'>
-                <ul className='list space-y-8'>
-                  <li className='flex space-x-3 rtl:space-x-reverse'>
-                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                      <Icon icon='heroicons:building-storefront' />
-                    </div>
-                    <div className='flex-1'>
-                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                        COMPANY NAME
-                      </div>
-                      <div className='text-base text-slate-600 dark:text-slate-50'>
-                        {details.company_name}
-                      </div>
-                    </div>
-                  </li>
-                  <li className='flex space-x-3 rtl:space-x-reverse'>
-                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                      <Icon icon='heroicons:calendar' />
-                    </div>
-                    <div className='flex-1'>
-                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                        INCORPORATION DATE
-                      </div>
-                      <div className='text-base text-slate-600 dark:text-slate-50'>
-                        {details.incorporation_date}
-                      </div>
-                    </div>
-                  </li>
-
-                  <li className='flex space-x-3 rtl:space-x-reverse'>
-                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                      <Icon icon='heroicons:building-office' />
-                    </div>
-                    <div className='flex-1'>
-                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                        OFFICE ADDRESS
-                      </div>
-                      <div className='text-base text-slate-600 dark:text-slate-50'>
-                        {details.office_address}
-                      </div>
-                    </div>
-                  </li>
-                  <li className='flex space-x-3 rtl:space-x-reverse'>
-                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                      <Icon icon='heroicons:globe-alt' />
-                    </div>
-                    <div className='flex-1'>
-                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                        COMPANY WEBSITE
-                      </div>
-                      <a
-                        href={details.company_website}
-                        className='text-base text-slate-600 dark:text-slate-50'
-                      >
-                        {details.company_website}
-                      </a>
-                    </div>
-                  </li>
-                  <li className='flex space-x-3 rtl:space-x-reverse'>
-                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                      <Icon icon='heroicons:briefcase' />
-                    </div>
-                    <div className='flex-1'>
-                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                        BUSINESS DESCRIPTION
-                      </div>
-                      <div className='text-base text-slate-600 dark:text-slate-50'>
-                        {details.short_description}
-                      </div>
-                    </div>
-                  </li>
-                  {/* <li className='flex space-x-3 rtl:space-x-reverse'>
-                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                      <Icon icon='heroicons:light-bulb' />
-                    </div>
-                    <div className='flex-1'>
-                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                        USP/MOAT
-                      </div>
-                      <div className='text-base text-slate-600 dark:text-slate-50'>
-                        {details.usp_moat}
-                      </div>
-                    </div>
-                  </li> */}
                 </ul>
               </Card>
             </div>

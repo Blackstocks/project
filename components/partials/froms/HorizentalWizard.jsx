@@ -28,7 +28,7 @@ import {
   cofounderSchema,
   businessSchema,
   fundingSchema,
-} from '@/schema/startup-form';
+} from '@/lib/schema/startup-form';
 
 const steps = [
   { id: 1, title: 'Contact Information' },
