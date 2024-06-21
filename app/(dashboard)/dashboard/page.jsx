@@ -316,87 +316,274 @@ const Ecommerce = () => {
         </div>
       )}
       {details?.type === "investor" && (
-        <div className="grid grid-cols-12 gap-5">
-          <div className="2xl:col-span-8 lg:col-span-7 col-span-12">
-            <Card>
-              <div className="grid md:grid-cols-1 grid-cols-1 gap-5">
-                <Card_D
-                  title="Global Dealflow"
-                  text="Learn More"
-                  href="/profile"
-                  isLocked={locked.globalDealflow}
-                />
-                <Card_D
-                  title="Valuate a Startup"
-                  text="Learn More"
-                  href="/profile"
-                  isLocked={locked.valuateStartup}
-                />
+        <div className="w-full border">
+          <section class="py-8 w-full">
+            <div class="container px-4 mx-auto">
+              <div class="grid grid-cols-3 ">
+                <div class="p-4">
+                  <div class="p-4 bg-white rounded">
+                    <div class="relative h-40 w-full mb-4">
+                      <img
+                        class="w-full h-full object-cover rounded"
+                        src="\assets\images\dashboard\Invest.jpg"
+                        alt=""
+                      />
+                    </div>
+                    <div class="flex mb-6 justify-center items-center">
+                      <h1
+                        class="text-sm font-medium"
+                        style={{
+                          fontSize: "large",
+                          textAlign: "center",
+                        }}
+                      >
+                        Global Dealflow
+                      </h1>
+                    </div>
+                    <div class="flex mb-2 justify-between items-center">
+                      <h3 class="text-xs font-medium">
+                        Access global deal flow opportunities, connecting with
+                        investors and startups worldwide for strategic growth.
+                      </h3>
+                    </div>
+                    <div
+                      class="flex items-center justify-start border-t border-gray-50 pt-4"
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <a
+                        class="py-2 px-3 bg-indigo-500 hover:bg-indigo-600 rounded text-xs text-white transition duration-200"
+                        href="#"
+                      >
+                        Explore
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div class="p-4 bg-white rounded">
+                    <div class="relative h-40 w-full mb-4">
+                      <img
+                        class="w-full h-full object-cover rounded"
+                        src="\assets\images\dashboard\pitchdeck.jpg"
+                        alt=""
+                      />
+                    </div>
+                    <div class="flex mb-6 justify-center items-center">
+                      <h1
+                        class="text-sm font-medium"
+                        style={{
+                          fontSize: "large",
+                          textAlign: "center",
+                        }}
+                      >
+                        Document Management
+                      </h1>
+                    </div>
+                    <div class="flex mb-2 justify-between items-center">
+                      <h3 class="text-xs font-medium">
+                        Streamline your document management with our secure
+                        platform, ensuring easy access and organization of
+                        critical files.
+                      </h3>
+                    </div>
+                    <div
+                      class="flex items-center justify-start border-t border-gray-50 pt-4"
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <a
+                        class="py-2 px-3 bg-indigo-500 hover:bg-indigo-600 rounded text-xs text-white transition duration-200"
+                        href="#"
+                      >
+                        Explore
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div class="p-4 bg-white rounded">
+                    <div class="relative h-40 w-full mb-4">
+                      <img
+                        class="w-full h-full object-cover rounded"
+                        src="\assets\images\dashboard\financial.jpg"
+                        alt=""
+                      />
+                    </div>
+                    <div class="flex mb-6 justify-center items-center">
+                      <h1
+                        class="text-sm font-medium"
+                        style={{
+                          fontSize: "large",
+                          textAlign: "center",
+                        }}
+                      >
+                        Syndicate
+                      </h1>
+                    </div>
+                    <div class="flex mb-2 justify-between items-center">
+                      <h3 class="text-xs font-medium">
+                        Join or create syndicates to pool resources, share
+                        risks, and invest in promising startups collaboratively.
+                      </h3>
+                    </div>
+                    <div
+                      class="flex items-center justify-start border-t border-gray-50 pt-4"
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <a
+                        class="py-2 px-3 bg-indigo-500 hover:bg-indigo-600 rounded text-xs text-white transition duration-200"
+                        href="#"
+                      >
+                        Explore
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </Card>
-          </div>
-          <div className="2xl:col-span-4 lg:col-span-5 col-span-12 gap-5">
-            <Card title="Syndicate">
-              <Card_D
-                title="Create a Syndicate"
-                text="Learn More"
-                href="/profile"
-                isLocked={locked.createSyndicate}
-              />
-              <Card_D
-                title="Join a Syndicate"
-                text="Learn More"
-                href="/profile"
-                isLocked={locked.joinSyndicate}
-              />
-            </Card>
-          </div>
-          <div className="2xl:col-span-8 lg:col-span-7 col-span-12 gap-5">
-            <Card title="Portfolio Management">
-              <div className="grid md:grid-cols-2 grid-cols-2 gap-5">
-                <Card_D
-                  title="Follow your Investment"
-                  text="Learn More"
-                  href="/profile"
-                  isLocked={locked.followInvestment}
-                />
-                <Card_D
-                  title="Sell my Shares (Secondary Shares)"
-                  text="Learn More"
-                  href="/profile"
-                  isLocked={locked.sellShares}
-                />
-                <Card_D
-                  title="Exit Strategy"
-                  text="Learn More"
-                  href="/profile"
-                  isLocked={locked.exitStrategy}
-                />
+            </div>
+          </section>
+          <section class="py-8 w-full">
+            <div class="container px-4 mx-auto">
+              <div class="grid grid-cols-3 ">
+                <div class="p-4">
+                  <div class="p-4 bg-white rounded">
+                    <div class="relative h-40 w-full mb-4">
+                      <img
+                        class="w-full h-full object-cover rounded"
+                        src="\assets\images\dashboard\fund.jpg"
+                        alt=""
+                      />
+                    </div>
+                    <div class="flex mb-6 justify-center items-center">
+                      <h1
+                        class="text-sm font-medium"
+                        style={{
+                          fontSize: "large",
+                          textAlign: "center",
+                        }}
+                      >
+                        Portfolio Management
+                      </h1>
+                    </div>
+                    <div class="flex mb-2 justify-between items-center">
+                      <h3 class="text-xs font-medium">
+                        Optimize your investments with our portfolio management
+                        tools, providing insights and tracking performance.
+                      </h3>
+                    </div>
+                    <div
+                      class="flex items-center justify-start border-t border-gray-50 pt-4"
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <a
+                        class="py-2 px-3 bg-indigo-500 hover:bg-indigo-600 rounded text-xs text-white transition duration-200"
+                        href="#"
+                      >
+                        Explore
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div class="p-4 bg-white rounded">
+                    <div class="relative h-40 w-full mb-4">
+                      <img
+                        class="w-full h-full object-cover rounded"
+                        src="\assets\images\dashboard\legal.jpg"
+                        alt=""
+                      />
+                    </div>
+                    <div class="flex mb-6 justify-center items-center">
+                      <h1
+                        class="text-sm font-medium"
+                        style={{
+                          fontSize: "large",
+                          textAlign: "center",
+                        }}
+                      >
+                        Valuate a startup
+                      </h1>
+                    </div>
+                    <div class="flex mb-2 justify-between items-center">
+                      <h3 class="text-xs font-medium">
+                        Accurately valuate startups using our comprehensive
+                        analysis tools, offering detailed financial and market
+                        evaluations.
+                      </h3>
+                    </div>
+                    <div
+                      class="flex items-center justify-start border-t border-gray-50 pt-4"
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <a
+                        class="py-2 px-3 bg-indigo-500 hover:bg-indigo-600 rounded text-xs text-white transition duration-200"
+                        href="#"
+                      >
+                        Explore
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div class="p-4 bg-white rounded">
+                    <div class="relative h-40 w-full mb-4">
+                      <img
+                        class="w-full h-full object-cover rounded"
+                        src="\assets\images\dashboard\connect.jpg"
+                        alt=""
+                      />
+                    </div>
+                    <div class="flex mb-6 justify-center items-center">
+                      <h1
+                        class="text-sm font-medium"
+                        style={{
+                          fontSize: "large",
+                          textAlign: "center",
+                        }}
+                      >
+                        Post Term Sheet
+                      </h1>
+                    </div>
+                    <div class="flex mb-2 justify-between items-center">
+                      <h3 class="text-xs font-medium">
+                        Manage post-term sheet activities efficiently with our
+                        tools, ensuring smooth transitions and adherence to
+                        agreements.
+                      </h3>
+                    </div>
+                    <div
+                      class="flex items-center justify-start border-t border-gray-50 pt-4"
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <a
+                        class="py-2 px-3 bg-indigo-500 hover:bg-indigo-600 rounded text-xs text-white transition duration-200"
+                        href="#"
+                      >
+                        Explore
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </Card>
-          </div>
-          <div className="2xl:col-span-4 lg:col-span-5 col-span-12">
-            <Card title="Post Term Sheet" titleClass="text-center">
-              <Card_D
-                title="Valuate a Startup"
-                text="Learn More"
-                href="/profile"
-                isLocked={locked.valuateStartup}
-              />
-              <Card_D
-                title="Due-Diligence Support"
-                text="Learn More"
-                href="/profile"
-                isLocked={locked.dueDiligenceSupport}
-              />
-              <Card_D
-                title="SHA Support"
-                text="Learn More"
-                href="/profile"
-                isLocked={locked.shaSupport}
-              />
-            </Card>
-          </div>
+            </div>
+          </section>
         </div>
       )}
     </div>
