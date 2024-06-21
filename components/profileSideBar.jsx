@@ -66,149 +66,156 @@ const VerticalNavTabs = () => {
             <Tab.Panels>
               <Tab.Panel>
                 <Card title='General Information' className='w-full'>
-                  <ul className='list space-y-8'>
-                    <li className='flex space-x-3 rtl:space-x-reverse'>
-                      <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                        <Icon icon='heroicons:envelope' />
-                      </div>
-                      <div className='flex-1'>
-                        <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                          EMAIL
+                  <div className='relative'>
+                    <ul className='list space-y-8'>
+                      <li className='flex space-x-3 rtl:space-x-reverse'>
+                        <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                          <Icon icon='heroicons:envelope' />
                         </div>
-                        <a
-                          href={`mailto:${
-                            user?.email || 'info-500@dashcode.com'
-                          }`}
-                          className='text-base text-slate-600 dark:text-slate-50'
-                        >
-                          {user?.email || 'info-500@dashcode.com'}
-                        </a>
-                      </div>
-                    </li>
-
-                    <li className='flex space-x-3 rtl:space-x-reverse'>
-                      <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                        <Icon icon='heroicons:phone-arrow-up-right' />
-                      </div>
-                      <div className='flex-1'>
-                        <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                          PHONE
-                        </div>
-                        <a
-                          href={`tel:${user?.mobile || '0189749676767'}`}
-                          className='text-base text-slate-600 dark:text-slate-50'
-                        >
-                          {user?.mobile || '+1-202-555-0151'}
-                        </a>
-                      </div>
-                    </li>
-
-                    <li className='flex space-x-3 rtl:space-x-reverse'>
-                      <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                        <Icon icon='heroicons:map' />
-                      </div>
-                      <div className='flex-1'>
-                        <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                          LOCATION
-                        </div>
-                        {details?.type === 'startup' && (
-                          <div className='text-base text-slate-600 dark:text-slate-50'>
-                            {details.country}, {details.state_city}
+                        <div className='flex-1'>
+                          <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                            EMAIL
                           </div>
-                        )}
-                      </div>
-                    </li>
-                  </ul>
+                          <a
+                            href={`mailto:${
+                              user?.email || 'info-500@dashcode.com'
+                            }`}
+                            className='text-base text-slate-600 dark:text-slate-50'
+                          >
+                            {user?.email || 'info-500@dashcode.com'}
+                          </a>
+                        </div>
+                      </li>
+
+                      <li className='flex space-x-3 rtl:space-x-reverse'>
+                        <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                          <Icon icon='heroicons:phone-arrow-up-right' />
+                        </div>
+                        <div className='flex-1'>
+                          <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                            PHONE
+                          </div>
+                          <a
+                            href={`tel:${user?.mobile || '0189749676767'}`}
+                            className='text-base text-slate-600 dark:text-slate-50'
+                          >
+                            {user?.mobile || '+1-202-555-0151'}
+                          </a>
+                        </div>
+                      </li>
+
+                      <li className='flex space-x-3 rtl:space-x-reverse'>
+                        <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                          <Icon icon='heroicons:map' />
+                        </div>
+                        <div className='flex-1'>
+                          <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                            LOCATION
+                          </div>
+                          {details?.type === 'startup' && (
+                            <div className='text-base text-slate-600 dark:text-slate-50'>
+                              {details.country}, {details.state_city}
+                            </div>
+                          )}
+                        </div>
+                      </li>
+                    </ul>
+                    <Link
+                      href='#'
+                      className='absolute right-4 top-4 h-8 w-auto bg-slate-50 text-slate-600 rounded-md shadow-md flex items-center justify-center px-3'
+                    >
+                      <Icon icon='heroicons:pencil-square' className='mr-1' />
+                      Edit
+                    </Link>
+                  </div>
                 </Card>
               </Tab.Panel>
               <Tab.Panel>
                 {details?.type === 'startup' && (
                   <div className='lg:col-span-6 col-span-6'>
                     <Card title='Startup Details'>
-                      <ul className='list space-y-8'>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:building-storefront' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              COMPANY NAME
+                      <div className='relative'>
+                        <ul className='list space-y-8'>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:building-storefront' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.company_name}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                COMPANY NAME
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.company_name}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:calendar' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              INCORPORATION DATE
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:calendar' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.incorporation_date}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                INCORPORATION DATE
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.incorporation_date}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:building-office' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              OFFICE ADDRESS
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:building-office' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.office_address}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                OFFICE ADDRESS
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.office_address}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:globe-alt' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              COMPANY WEBSITE
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:globe-alt' />
                             </div>
-                            <a
-                              href={details.company_website}
-                              className='text-base text-slate-600 dark:text-slate-50'
-                            >
-                              {details.company_website}
-                            </a>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:briefcase' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              BUSINESS DESCRIPTION
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                COMPANY WEBSITE
+                              </div>
+                              <a
+                                href={details.company_website}
+                                className='text-base text-slate-600 dark:text-slate-50'
+                              >
+                                {details.company_website}
+                              </a>
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.short_description}
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:briefcase' />
                             </div>
-                          </div>
-                        </li>
-                        {/* <li className='flex space-x-3 rtl:space-x-reverse'>
-                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                      <Icon icon='heroicons:light-bulb' />
-                    </div>
-                    <div className='flex-1'>
-                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                        USP/MOAT
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                BUSINESS DESCRIPTION
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.short_description}
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                        <Link
+                          href='#'
+                          className='absolute right-4 top-4 h-8 w-auto bg-slate-50 text-slate-600 rounded-md shadow-md flex items-center justify-center px-3'
+                        >
+                          <Icon
+                            icon='heroicons:pencil-square'
+                            className='mr-1'
+                          />
+                          Edit
+                        </Link>
                       </div>
-                      <div className='text-base text-slate-600 dark:text-slate-50'>
-                        {details.usp_moat}
-                      </div>
-                    </div>
-                  </li> */}
-                      </ul>
                     </Card>
                   </div>
                 )}
@@ -217,104 +224,116 @@ const VerticalNavTabs = () => {
                 {details?.type === 'startup' && (
                   <div className='lg:col-span-6 col-span-6'>
                     <Card title='Founder Information'>
-                      <ul className='list space-y-8'>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:user' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              FOUNDER NAME
+                      <div className='relative'>
+                        <ul className='list space-y-8'>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:user' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.founderInformation?.founder_name}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                FOUNDER NAME
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.founderInformation?.founder_name}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:envelope' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              EMAIL
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:envelope' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.founderInformation?.founder_email}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                EMAIL
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.founderInformation?.founder_email}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:phone' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              MOBILE NUMBER
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:phone' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.founderInformation?.founder_mobile}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                MOBILE NUMBER
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.founderInformation?.founder_mobile}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:globe-alt' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              LINKEDIN PROFILE
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:globe-alt' />
                             </div>
-                            <a
-                              href={
-                                details.founderInformation?.founder_linkedin
-                              }
-                              className='text-base text-slate-600 dark:text-slate-50'
-                            >
-                              {details.founderInformation?.founder_linkedin}
-                            </a>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:academic-cap' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              DEGREE NAME
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                LINKEDIN PROFILE
+                              </div>
+                              <a
+                                href={
+                                  details.founderInformation?.founder_linkedin
+                                }
+                                className='text-base text-slate-600 dark:text-slate-50'
+                              >
+                                {details.founderInformation?.founder_linkedin}
+                              </a>
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.founderInformation?.degree_name}
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:academic-cap' />
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:building-library' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              COLLEGE NAME
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                DEGREE NAME
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.founderInformation?.degree_name}
+                              </div>
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.founderInformation?.college_name}
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:building-library' />
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:calendar' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              YEAR OF GRADUATION
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                COLLEGE NAME
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.founderInformation?.college_name}
+                              </div>
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.founderInformation?.graduation_year}
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:calendar' />
                             </div>
-                          </div>
-                        </li>
-                      </ul>
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                YEAR OF GRADUATION
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.founderInformation?.graduation_year}
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                        <Link
+                          href='#'
+                          className='absolute right-4 top-4 h-8 w-auto bg-slate-50 text-slate-600 rounded-md shadow-md flex items-center justify-center px-3'
+                        >
+                          <Icon
+                            icon='heroicons:pencil-square'
+                            className='mr-1'
+                          />
+                          Edit
+                        </Link>
+                      </div>
                     </Card>
                   </div>
                 )}
@@ -323,174 +342,203 @@ const VerticalNavTabs = () => {
                 {details?.type === 'startup' && details.businessDetails && (
                   <div className='lg:col-span-6 col-span-6'>
                     <Card title='Business Details'>
-                      <ul className='list space-y-8'>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:briefcase' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              INDUSTRY OR SECTOR
+                      <div className='relative'>
+                        <ul className='list space-y-8'>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:briefcase' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.businessDetails.industry_sector}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                INDUSTRY OR SECTOR
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.businessDetails.industry_sector}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:chart-bar' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              CURRENT STAGE
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:chart-bar' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.businessDetails.current_stage}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                CURRENT STAGE
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.businessDetails.current_stage}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:users' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              TEAM SIZE
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:users' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.businessDetails.team_size}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                TEAM SIZE
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.businessDetails.team_size}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:flag' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              TARGET AUDIENCE
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:flag' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.businessDetails.target_audience}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                TARGET AUDIENCE
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.businessDetails.target_audience}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:light-bulb' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              USP/MOAT
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:light-bulb' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.businessDetails.usp_moat}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                USP/MOAT
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.businessDetails.usp_moat}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                      </ul>
+                          </li>
+                        </ul>
+                        <Link
+                          href='#'
+                          className='absolute right-4 top-4 h-8 w-auto bg-slate-50 text-slate-600 rounded-md shadow-md flex items-center justify-center px-3'
+                        >
+                          <Icon
+                            icon='heroicons:pencil-square'
+                            className='mr-1'
+                          />
+                          Edit
+                        </Link>
+                      </div>
                     </Card>
                   </div>
                 )}
               </Tab.Panel>
               <Tab.Panel>
-                {details?.type === 'startup' && details.fundingInformation && (
+                {details?.type === 'startup' && (
                   <div className='lg:col-span-6 col-span-6'>
-                    <Card title='Funding Information'>
-                      <ul className='list space-y-8'>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:currency-dollar' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              TOTAL FUNDING ASK
+                    <Card title='Founder Information'>
+                      <div className='relative'>
+                        <ul className='list space-y-8'>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:user' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.fundingInformation.total_funding_ask}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                FOUNDER NAME
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.founderInformation?.founder_name}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:banknotes' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              AMOUNT COMMITTED SO FAR
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:envelope' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.fundingInformation.amount_committed}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                EMAIL
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.founderInformation?.founder_email}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:clipboard-document-check' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              GOVERNMENT GRANTS
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:phone' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.fundingInformation.government_grants}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                MOBILE NUMBER
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.founderInformation?.founder_mobile}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:chart-pie' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              EQUITY SPLIT AMONG THE FOUNDERS
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:globe-alt' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.fundingInformation.equity_split}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                LINKEDIN PROFILE
+                              </div>
+                              <a
+                                href={
+                                  details.founderInformation?.founder_linkedin
+                                }
+                                className='text-base text-slate-600 dark:text-slate-50'
+                              >
+                                {details.founderInformation?.founder_linkedin}
+                              </a>
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:document-text' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              FUND UTILIZATION SUMMARY
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:academic-cap' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.fundingInformation.fund_utilization}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                DEGREE NAME
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.founderInformation?.degree_name}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:chart-bar' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              ANNUAL RECURRING REVENUE (ARR)
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:building-library' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.fundingInformation.arr}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                COLLEGE NAME
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.founderInformation?.college_name}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                        <li className='flex space-x-3 rtl:space-x-reverse'>
-                          <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                            <Icon icon='heroicons:chart-bar' />
-                          </div>
-                          <div className='flex-1'>
-                            <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                              MONTHLY RECURRING REVENUE (MRR)
+                          </li>
+                          <li className='flex space-x-3 rtl:space-x-reverse'>
+                            <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                              <Icon icon='heroicons:calendar' />
                             </div>
-                            <div className='text-base text-slate-600 dark:text-slate-50'>
-                              {details.fundingInformation.mrr}
+                            <div className='flex-1'>
+                              <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                                YEAR OF GRADUATION
+                              </div>
+                              <div className='text-base text-slate-600 dark:text-slate-50'>
+                                {details.founderInformation?.graduation_year}
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                      </ul>
+                          </li>
+                        </ul>
+                        <Link
+                          href='#'
+                          className='absolute right-4 top-4 h-8 w-auto bg-slate-50 text-slate-600 rounded-md shadow-md outline-none flex items-center justify-center px-3'
+                        >
+                          <Icon
+                            icon='heroicons:pencil-square'
+                            className='mr-1'
+                          />
+                          Edit
+                        </Link>
+                      </div>
                     </Card>
                   </div>
                 )}
