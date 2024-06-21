@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Card from '@/components/ui/Card';
-import Card_D from '@/components/card_dashboard';
-import Loading from '@/components/Loading';
-import useUserDetails from '@/hooks/useUserDetails';
+import React, { useState } from "react";
+import Card from "@/components/ui/Card";
+import Card_D from "@/components/card_dashboard";
+import Loading from "@/components/Loading";
+import useUserDetails from "@/hooks/useUserDetails";
 
 const Ecommerce = () => {
   const { user, details, loading } = useUserDetails();
@@ -42,213 +42,357 @@ const Ecommerce = () => {
   }
 
   return (
-    <div>
-      {details?.type === 'startup' && (
-        <div className='grid grid-cols-12 gap-5'>
-          <div className='2xl:col-span-8 lg:col-span-7 col-span-12'>
-            <Card title='Investment Readiness'>
-              <div className='grid md:grid-cols-2 grid-cols-2 gap-5'>
-                <div className='grid md:grid-cols-2 grid-cols-2 gap-5'>
-                  <Card_D
-                    title='Avail Startup India Certificate'
-                    text='download'
-                    href='/profile'
-                    isLocked={locked.availStartupIndiaCertificate}
-                  />
-                  <Card_D
-                    title='GST Certificate'
-                    text='download'
-                    href='/profile'
-                    isLocked={locked.gstCertificate}
-                  />
-                  <Card_D
-                    title='Intellectual Property'
-                    text='Learn More'
-                    href='/profile'
-                    isLocked={locked.intellectualProperty}
-                  />
-                  <Card_D
-                    title='Virtual Office Support'
-                    text='Learn More'
-                    href='/profile'
-                    isLocked={locked.virtualOfficeSupport}
-                  />
+    <div className="w-full">
+      {details?.type === "startup" && (
+        <div className="w-full border">
+          <section class="py-8 w-full">
+            <div class="container px-4 mx-auto">
+              <div class="grid grid-cols-3 ">
+                <div class="p-4">
+                  <div class="p-4 bg-white rounded">
+                    <div class="relative h-40 w-full mb-4">
+                      <img
+                        class="w-full h-full object-cover rounded"
+                        src="\assets\images\dashboard\Invest.jpg"
+                        alt=""
+                      />
+                    </div>
+                    <div class="flex mb-6 justify-center items-center">
+                      <h1
+                        class="text-sm font-medium"
+                        style={{
+                          fontSize: "large",
+                          textAlign: "center",
+                        }}
+                      >
+                        Investment Readiness
+                      </h1>
+                    </div>
+                    <div class="flex mb-2 justify-between items-center">
+                      <h3 class="text-xs font-medium">
+                        Achieve investment readiness with our comprehensive
+                        tools for incorporation, certification, IP, and cap
+                        table management.
+                      </h3>
+                    </div>
+                    <div
+                      class="flex items-center justify-start border-t border-gray-50 pt-4"
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <a
+                        class="py-2 px-3 bg-indigo-500 hover:bg-indigo-600 rounded text-xs text-white transition duration-200"
+                        href="#"
+                      >
+                        Explore
+                      </a>
+                    </div>
+                  </div>
                 </div>
-                <Card_D
-                  title='CapTable Management'
-                  text='Learn More'
-                  href='/profile'
-                  isLocked={locked.capTableManagement}
-                />
+                <div class="p-4">
+                  <div class="p-4 bg-white rounded">
+                    <div class="relative h-40 w-full mb-4">
+                      <img
+                        class="w-full h-full object-cover rounded"
+                        src="\assets\images\dashboard\pitchdeck.jpg"
+                        alt=""
+                      />
+                    </div>
+                    <div class="flex mb-6 justify-center items-center">
+                      <h1
+                        class="text-sm font-medium"
+                        style={{
+                          fontSize: "large",
+                          textAlign: "center",
+                        }}
+                      >
+                        DIY Pitch Deck
+                      </h1>
+                    </div>
+                    <div class="flex mb-2 justify-between items-center">
+                      <h3 class="text-xs font-medium">
+                        Create your own pitch deck effortlessly with our DIY
+                        tool, equipped with templates and customization options.
+                      </h3>
+                    </div>
+                    <div
+                      class="flex items-center justify-start border-t border-gray-50 pt-4"
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <a
+                        class="py-2 px-3 bg-indigo-500 hover:bg-indigo-600 rounded text-xs text-white transition duration-200"
+                        href="#"
+                      >
+                        Explore
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div class="p-4 bg-white rounded">
+                    <div class="relative h-40 w-full mb-4">
+                      <img
+                        class="w-full h-full object-cover rounded"
+                        src="\assets\images\dashboard\financial.jpg"
+                        alt=""
+                      />
+                    </div>
+                    <div class="flex mb-6 justify-center items-center">
+                      <h1
+                        class="text-sm font-medium"
+                        style={{
+                          fontSize: "large",
+                          textAlign: "center",
+                        }}
+                      >
+                        Financial Insights
+                      </h1>
+                    </div>
+                    <div class="flex mb-2 justify-between items-center">
+                      <h3 class="text-xs font-medium">
+                        Gain comprehensive financial insights with our advanced
+                        analytics tool, providing real-time data and trends.
+                      </h3>
+                    </div>
+                    <div
+                      class="flex items-center justify-start border-t border-gray-50 pt-4"
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <a
+                        class="py-2 px-3 bg-indigo-500 hover:bg-indigo-600 rounded text-xs text-white transition duration-200"
+                        href="#"
+                      >
+                        Explore
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </Card>
-          </div>
-          <div className='2xl:col-span-4 lg:col-span-5 col-span-12 gap-5'>
-            <Card>
-              <Card_D
-                title='DIY Pitch Deck'
-                text='Learn More'
-                href='/profile'
-                isLocked={locked.diyPitchDeck}
-              />
-              <Card_D
-                title='Financial Insights'
-                text='Learn More'
-                href='/profile'
-                isLocked={locked.financialInsights}
-              />
-              <Card_D
-                title='Connect with Incubators'
-                text='Learn More'
-                href='/profile'
-                isLocked={locked.connectWithIncubators}
-              />
-            </Card>
-          </div>
-          <div className='2xl:col-span-8 lg:col-span-7 col-span-12 gap-5'>
-            <Card title='Fundraising'>
-              <div className='grid md:grid-cols-2 grid-cols-2 gap-5'>
-                <Card_D
-                  title='Debt Fundraising'
-                  text='Learn More'
-                  href='/profile'
-                  isLocked={locked.debtFundraising}
-                />
-                <Card_D
-                  title='Equity Fundraising'
-                  text='Learn More'
-                  href='/profile'
-                  isLocked={locked.equityFundraising}
-                />
-                <Card_D
-                  title='M&A'
-                  text='Learn More'
-                  href='/profile'
-                  isLocked={locked.ma}
-                />
-                <Card_D
-                  title='Valuate My Business'
-                  text='Learn More'
-                  href='/profile'
-                  isLocked={locked.valuateMyBusiness}
-                />
-                <Card_D
-                  title='Investment Banking Support'
-                  text='Learn More'
-                  href='/profile'
-                  isLocked={locked.investmentBankingSupport}
-                />
-                <Card_D
-                  title='Fundraising through Secondary Shares'
-                  text='Learn More'
-                  href='/profile'
-                  isLocked={locked.fundraisingSecondaryShares}
-                />
+            </div>
+          </section>
+          <section class="py-8 w-full">
+            <div class="container px-4 mx-auto">
+              <div class="grid grid-cols-3 ">
+                <div class="p-4">
+                  <div class="p-4 bg-white rounded">
+                    <div class="relative h-40 w-full mb-4">
+                      <img
+                        class="w-full h-full object-cover rounded"
+                        src="\assets\images\dashboard\fund.jpg"
+                        alt=""
+                      />
+                    </div>
+                    <div class="flex mb-6 justify-center items-center">
+                      <h1
+                        class="text-sm font-medium"
+                        style={{
+                          fontSize: "large",
+                          textAlign: "center",
+                        }}
+                      >
+                        Fundraising
+                      </h1>
+                    </div>
+                    <div class="flex mb-2 justify-between items-center">
+                      <h3 class="text-xs font-medium">
+                        Streamline your fund raising with our platform, offering
+                        tailored solutions and connections to potential
+                        investors.
+                      </h3>
+                    </div>
+                    <div
+                      class="flex items-center justify-start border-t border-gray-50 pt-4"
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <a
+                        class="py-2 px-3 bg-indigo-500 hover:bg-indigo-600 rounded text-xs text-white transition duration-200"
+                        href="#"
+                      >
+                        Explore
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div class="p-4 bg-white rounded">
+                    <div class="relative h-40 w-full mb-4">
+                      <img
+                        class="w-full h-full object-cover rounded"
+                        src="\assets\images\dashboard\legal.jpg"
+                        alt=""
+                      />
+                    </div>
+                    <div class="flex mb-6 justify-center items-center">
+                      <h1
+                        class="text-sm font-medium"
+                        style={{
+                          fontSize: "large",
+                          textAlign: "center",
+                        }}
+                      >
+                        Legal Help Desk
+                      </h1>
+                    </div>
+                    <div class="flex mb-2 justify-between items-center">
+                      <h3 class="text-xs font-medium">
+                        Access expert legal assistance with our help desk,
+                        offering guidance on contracts, compliance, and legal
+                        documentation.
+                      </h3>
+                    </div>
+                    <div
+                      class="flex items-center justify-start border-t border-gray-50 pt-4"
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <a
+                        class="py-2 px-3 bg-indigo-500 hover:bg-indigo-600 rounded text-xs text-white transition duration-200"
+                        href="#"
+                      >
+                        Explore
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-4">
+                  <div class="p-4 bg-white rounded">
+                    <div class="relative h-40 w-full mb-4">
+                      <img
+                        class="w-full h-full object-cover rounded"
+                        src="\assets\images\dashboard\connect.jpg"
+                        alt=""
+                      />
+                    </div>
+                    <div class="flex mb-6 justify-center items-center">
+                      <h1
+                        class="text-sm font-medium"
+                        style={{
+                          fontSize: "large",
+                          textAlign: "center",
+                        }}
+                      >
+                        Connect with Incubators
+                      </h1>
+                    </div>
+                    <div class="flex mb-2 justify-between items-center">
+                      <h3 class="text-xs font-medium">
+                        Connect with top incubators through our platform,
+                        fostering growth and providing valuable mentorship and
+                        resources.
+                      </h3>
+                    </div>
+                    <div
+                      class="flex items-center justify-start border-t border-gray-50 pt-4"
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <a
+                        class="py-2 px-3 bg-indigo-500 hover:bg-indigo-600 rounded text-xs text-white transition duration-200"
+                        href="#"
+                      >
+                        Explore
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </Card>
-          </div>
-          <div className='2xl:col-span-4 lg:col-span-5 col-span-12'>
-            <Card title='Legal Help Desk'>
-              <Card_D
-                title='Contracts and Agreements'
-                text='Learn More'
-                href='/profile'
-                isLocked={locked.contractsAndAgreements}
-              />
-              <Card_D
-                title='Review my Termsheet'
-                text='Learn More'
-                href='/profile'
-                isLocked={locked.reviewMyTermsheet}
-              />
-              <Card_D
-                title='Review my SHA'
-                text='Learn More'
-                href='/profile'
-                isLocked={locked.reviewMySHA}
-              />
-            </Card>
-          </div>
+            </div>
+          </section>
         </div>
       )}
-      {details?.type === 'investor' && (
-        <div className='grid grid-cols-12 gap-5'>
-          <div className='2xl:col-span-8 lg:col-span-7 col-span-12'>
+      {details?.type === "investor" && (
+        <div className="grid grid-cols-12 gap-5">
+          <div className="2xl:col-span-8 lg:col-span-7 col-span-12">
             <Card>
-              <div className='grid md:grid-cols-1 grid-cols-1 gap-5'>
+              <div className="grid md:grid-cols-1 grid-cols-1 gap-5">
                 <Card_D
-                  title='Global Dealflow'
-                  text='Learn More'
-                  href='/profile'
+                  title="Global Dealflow"
+                  text="Learn More"
+                  href="/profile"
                   isLocked={locked.globalDealflow}
                 />
                 <Card_D
-                  title='Valuate a Startup'
-                  text='Learn More'
-                  href='/profile'
+                  title="Valuate a Startup"
+                  text="Learn More"
+                  href="/profile"
                   isLocked={locked.valuateStartup}
                 />
               </div>
             </Card>
           </div>
-          <div className='2xl:col-span-4 lg:col-span-5 col-span-12 gap-5'>
-            <Card title='Syndicate'>
+          <div className="2xl:col-span-4 lg:col-span-5 col-span-12 gap-5">
+            <Card title="Syndicate">
               <Card_D
-                title='Create a Syndicate'
-                text='Learn More'
-                href='/profile'
+                title="Create a Syndicate"
+                text="Learn More"
+                href="/profile"
                 isLocked={locked.createSyndicate}
               />
               <Card_D
-                title='Join a Syndicate'
-                text='Learn More'
-                href='/profile'
+                title="Join a Syndicate"
+                text="Learn More"
+                href="/profile"
                 isLocked={locked.joinSyndicate}
               />
             </Card>
           </div>
-          <div className='2xl:col-span-8 lg:col-span-7 col-span-12 gap-5'>
-            <Card title='Portfolio Management'>
-              <div className='grid md:grid-cols-2 grid-cols-2 gap-5'>
+          <div className="2xl:col-span-8 lg:col-span-7 col-span-12 gap-5">
+            <Card title="Portfolio Management">
+              <div className="grid md:grid-cols-2 grid-cols-2 gap-5">
                 <Card_D
-                  title='Follow your Investment'
-                  text='Learn More'
-                  href='/profile'
+                  title="Follow your Investment"
+                  text="Learn More"
+                  href="/profile"
                   isLocked={locked.followInvestment}
                 />
                 <Card_D
-                  title='Sell my Shares (Secondary Shares)'
-                  text='Learn More'
-                  href='/profile'
+                  title="Sell my Shares (Secondary Shares)"
+                  text="Learn More"
+                  href="/profile"
                   isLocked={locked.sellShares}
                 />
                 <Card_D
-                  title='Exit Strategy'
-                  text='Learn More'
-                  href='/profile'
+                  title="Exit Strategy"
+                  text="Learn More"
+                  href="/profile"
                   isLocked={locked.exitStrategy}
                 />
               </div>
             </Card>
           </div>
-          <div className='2xl:col-span-4 lg:col-span-5 col-span-12'>
-            <Card title='Post Term Sheet' titleClass='text-center'>
+          <div className="2xl:col-span-4 lg:col-span-5 col-span-12">
+            <Card title="Post Term Sheet" titleClass="text-center">
               <Card_D
-                title='Valuate a Startup'
-                text='Learn More'
-                href='/profile'
+                title="Valuate a Startup"
+                text="Learn More"
+                href="/profile"
                 isLocked={locked.valuateStartup}
               />
               <Card_D
-                title='Due-Diligence Support'
-                text='Learn More'
-                href='/profile'
+                title="Due-Diligence Support"
+                text="Learn More"
+                href="/profile"
                 isLocked={locked.dueDiligenceSupport}
               />
               <Card_D
-                title='SHA Support'
-                text='Learn More'
-                href='/profile'
+                title="SHA Support"
+                text="Learn More"
+                href="/profile"
                 isLocked={locked.shaSupport}
               />
             </Card>
