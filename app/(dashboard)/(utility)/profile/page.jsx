@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import useUserDetails from '@/hooks/useUserDetails';
@@ -19,34 +20,27 @@ import {
 const Profile = () => {
   const { user, details, loading } = useUserDetails();
   const [editingSection, setEditingSection] = useState(null);
-
-  const handleSave = async (formData, section) => {
-    const formData = new FormData(formElement);
-    const updatedData = {};
-
-    formData.forEach((value, key) => {
-      updatedData[key] = value;
-    });
-
-    console.log('Updated Data:', updatedData);
+  const { register, handleSubmit, reset } = useForm();
+  const handleSave = async (data, section) => {
+    console.log('Updated Data:', data);
 
     try {
       let result;
       switch (section) {
         case 'general_info':
-          result = await updateGeneralInfo(user.id, updatedData);
+          result = await updateGeneralInfo(user.id, data);
           break;
         case 'startup_details':
-          result = await updateStartupDetails(details.profile_id, updatedData);
+          result = await updateStartupDetails(details.profile_id, data);
           break;
         case 'founder_info':
-          result = await updateFounderInfo(details.company_id, updatedData);
+          result = await updateFounderInfo(details.id, data);
           break;
         case 'business_details':
-          result = await updateBusinessDetails(details.company_id, updatedData);
+          result = await updateBusinessDetails(details.id, data);
           break;
         case 'funding_info':
-          result = await updateFundingInfo(details.company_id, updatedData);
+          result = await updateFundingInfo(details.id, data);
           break;
         default:
           console.error('Unknown section:', section);
@@ -54,7 +48,7 @@ const Profile = () => {
       }
 
       console.log('Profile updated:', result);
-      // Optionally, you can update the state with new details
+      reset();
     } catch (error) {
       console.error('Unexpected error:', error);
     } finally {
@@ -108,16 +102,30 @@ const Profile = () => {
               {editingSection === 'general_info' ? (
                 <Card title='Edit General Information'>
                   <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      handleSave(e.target, 'general_info');
-                    }}
+                    onSubmit={handleSubmit((data) =>
+                      handleSave(data, 'general_info')
+                    )}
                   >
-                    <Textinput label='Email' defaultValue={user?.email} />
-                    <Textinput label='Phone' defaultValue={user?.mobile} />
+                    <Textinput
+                      label='Email'
+                      name='email'
+                      type='email'
+                      defaultValue={user?.email}
+                      register={register}
+                    />
+                    <Textinput
+                      label='Phone'
+                      name='mobile'
+                      defaultValue={user?.mobile}
+                      register={register}
+                    />
                     <Textinput
                       label='Location'
-                      defaultValue={`${details?.country}, ${details?.state_city}`}
+                      name='location'
+                      defaultValue={`${details?.country || ''}, ${
+                        details?.state_city || ''
+                      }`}
+                      register={register}
                     />
                     <Button text='Save' type='submit' className='btn-dark' />
                     <Button
@@ -264,6 +272,8 @@ const Profile = () => {
           editingSection={editingSection}
           setEditingSection={setEditingSection}
           handleSave={handleSave}
+          register={register}
+          handleSubmit={handleSubmit}
         />
       )}
     </div>
