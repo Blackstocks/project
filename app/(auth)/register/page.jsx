@@ -24,11 +24,30 @@ const Register = () => {
                   height: "10vh",
                 }}
               >
-                
+                <img
+                  src="\assets\images\auth\logoblueun.png"
+                  alt="Logo"
+                  style={{
+                    height: "300px", // increased height
+                    width: "450px", // increased width
+                    objectFit: "contain",
+                    marginTop: "15vh",
+                    marginLeft:"10vh",
+                  }}
+                />
               </div>
 
               <div>
-                <earth></earth>
+                <img
+                  src="/assets/images/giff/giflogoun.gif"
+                  alt="GIF Logo"
+                  style={{
+                    height: "500px",
+                    width: "600px",
+                    marginLeft: "70px",
+                    marginTop: "60px",
+                  }}
+                />
               </div>
             </div>
           </div>
