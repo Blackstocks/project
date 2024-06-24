@@ -9,7 +9,7 @@ import ThemeProvider from './theme-provider';
 import { ToastContainer } from 'react-toastify';
 
 export const metadata = {
-  title: 'Dashcode Next Js',
+  title: 'Xellerates',
   description: 'Dashcode is a popular dashboard template.',
 };
 

@@ -28,7 +28,7 @@ const SidebarLogo = ({ menuHover }) => {
       <Link href='/dashboard'>
         <div className='flex items-center space-x-4'>
           <div className='logo-icon '>
-            {!isDark && !isSemiDark ? (
+            {(collapsed && menuHover) || (!isDark && !isSemiDark) ? (
               <img
                 src='/assets/images/logo/xlogo-white-removebg-preview.png'
                 alt=''
@@ -39,13 +39,14 @@ const SidebarLogo = ({ menuHover }) => {
             )}
           </div>
 
-          {/* {(!collapsed || menuHover) && (
-            <div>
-              <h1 className='text-xl font-semibold text-slate-900 dark:text-slate-100'>
-                Xcellerates
-              </h1>
-            </div>
-          )} */}
+          {!collapsed ||
+            (!menuHover && (
+              <img
+                src='assets/images/logo/L3.svg'
+                alt=''
+                style={{ margin: '0 auto', height: '2em' }}
+              />
+            ))}
         </div>
       </Link>
 
