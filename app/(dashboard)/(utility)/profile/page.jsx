@@ -15,12 +15,16 @@ import {
   updateFounderInfo,
   updateBusinessDetails,
   updateFundingInfo,
+  updateInvestorDetails,
+  updateProfile,
 } from '@/lib/actions/insertformdetails';
 
 const Profile = () => {
-  const { user, details, loading } = useUserDetails();
+  const { user, details, loading, updateDetailsLocally, updateUserLocally } =
+    useUserDetails();
   const [editingSection, setEditingSection] = useState(null);
   const { register, handleSubmit, reset } = useForm();
+
   const handleSave = async (data, section) => {
     console.log('Updated Data:', data);
 
@@ -28,7 +32,15 @@ const Profile = () => {
       let result;
       switch (section) {
         case 'general_info':
-          result = await updateGeneralInfo(user.id, data);
+          result = await Promise.all([
+            updateProfile(user.id, { email: data.email, mobile: data.mobile }),
+            updateInvestorDetails(details.profile_id, {
+              email: data.email,
+              mobile: data.mobile,
+            }),
+          ]);
+          updateUserLocally({ email: data.email, mobile: data.mobile });
+          updateDetailsLocally({ email: data.email, mobile: data.mobile });
           break;
         case 'startup_details':
           result = await updateStartupDetails(details.profile_id, data);
@@ -42,6 +54,10 @@ const Profile = () => {
         case 'funding_info':
           result = await updateFundingInfo(details.id, data);
           break;
+        case 'investor_details':
+          result = await updateInvestorDetails(details.profile_id, data);
+          updateDetailsLocally(data);
+          break;
         default:
           console.error('Unknown section:', section);
           return;
@@ -49,10 +65,9 @@ const Profile = () => {
 
       console.log('Profile updated:', result);
       reset();
+      setEditingSection(null);
     } catch (error) {
       console.error('Unexpected error:', error);
-    } finally {
-      setEditingSection(null);
     }
   };
 
@@ -75,12 +90,6 @@ const Profile = () => {
                   alt=''
                   className='w-full h-full object-cover rounded-full'
                 />
-                <button
-                  onClick={() => setEditingSection('')}
-                  className='absolute right-2 h-8 w-8 bg-slate-50 text-slate-600 rounded-full shadow-sm flex flex-col items-center justify-center md:top-[140px] top-[100px]'
-                >
-                  <Icon icon='heroicons:pencil-square' />
-                </button>
               </div>
             </div>
             <div className='flex-1'>
@@ -96,173 +105,286 @@ const Profile = () => {
       </div>
 
       <div className='grid grid-cols-12 gap-6'>
-        <div className='lg:col-span-6 col-span-6'>
-          {details?.type === 'investor' && (
-            <Card title='User Info'>
-              {editingSection === 'general_info' ? (
-                <Card title='Edit General Information'>
+        {details?.type === 'investor' && (
+          <>
+            {editingSection !== 'general_info' && (
+              <div className='relative lg:col-span-6 col-span-12'>
+                <Card title='User Info'>
+                  <ul className='list space-y-8'>
+                    <li className='flex space-x-3 rtl:space-x-reverse'>
+                      <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                        <Icon icon='heroicons:envelope' />
+                      </div>
+                      <div className='flex-1'>
+                        <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                          EMAIL
+                        </div>
+                        <a
+                          href={`mailto:${user?.email}`}
+                          className='text-base text-slate-600 dark:text-slate-50'
+                        >
+                          {user?.email}
+                        </a>
+                      </div>
+                    </li>
+                    <li className='flex space-x-3 rtl:space-x-reverse'>
+                      <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                        <Icon icon='heroicons:phone-arrow-up-right' />
+                      </div>
+                      <div className='flex-1'>
+                        <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                          PHONE
+                        </div>
+                        <a
+                          href={`tel:${user?.mobile}`}
+                          className='text-base text-slate-600 dark:text-slate-50'
+                        >
+                          {user?.mobile}
+                        </a>
+                      </div>
+                    </li>
+                  </ul>
+                  <Button
+                    onClick={() => setEditingSection('general_info')}
+                    className='absolute right-4 top-16 h-8 w-auto text-white bg-[rgb(30,41,59)] rounded-md shadow-md flex items-center justify-center px-3'
+                  >
+                    <Icon icon='heroicons:pencil-square' className='mr-1' />{' '}
+                    Edit
+                  </Button>
+                </Card>
+              </div>
+            )}
+            {editingSection === 'general_info' && (
+              <div className='relative lg:col-span-6 col-span-12'>
+                <Card title='Edit User Info'>
                   <form
                     onSubmit={handleSubmit((data) =>
                       handleSave(data, 'general_info')
                     )}
                   >
-                    <Textinput
-                      label='Email'
-                      name='email'
-                      type='email'
-                      defaultValue={user?.email}
-                      register={register}
-                    />
-                    <Textinput
-                      label='Phone'
-                      name='mobile'
-                      defaultValue={user?.mobile}
-                      register={register}
-                    />
-                    <Textinput
-                      label='Location'
-                      name='location'
-                      defaultValue={`${details?.country || ''}, ${
-                        details?.state_city || ''
-                      }`}
-                      register={register}
-                    />
-                    <Button text='Save' type='submit' className='btn-dark' />
-                    <Button
-                      text='Cancel'
-                      onClick={() => setEditingSection(null)}
-                      className='btn-light'
-                    />
+                    <div className='space-y-4'>
+                      <div className='mb-4'>
+                        <label className='block uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                          <Icon
+                            icon='heroicons:envelope'
+                            className='inline-block mr-1 text-xl mb-2'
+                          />
+                          Email
+                        </label>
+                        <Textinput
+                          name='email'
+                          defaultValue={user?.email}
+                          register={register}
+                        />
+                      </div>
+                      <div className='mb-4'>
+                        <label className='block uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                          <Icon
+                            icon='heroicons:phone-arrow-up-right'
+                            className='inline-block mr-1 text-xl mb-2'
+                          />
+                          Phone
+                        </label>
+                        <Textinput
+                          name='mobile'
+                          defaultValue={user?.mobile}
+                          register={register}
+                        />
+                      </div>
+                    </div>
+                    <div className='flex mt-4'>
+                      <Button
+                        text='Save'
+                        type='submit'
+                        className='btn-dark mr-4'
+                      />
+                      <Button
+                        text='Cancel'
+                        onClick={() => setEditingSection(null)}
+                        className='btn-light'
+                      />
+                    </div>
                   </form>
                 </Card>
-              ) : (
-                <Card className='w-full'>
-                  <div className='relative'>
-                    <ul className='list space-y-8'>
-                      <li className='flex space-x-3 rtl:space-x-reverse'>
-                        <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                          <Icon icon='heroicons:envelope' />
-                        </div>
-                        <div className='flex-1'>
-                          <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                            EMAIL
-                          </div>
-                          <a
-                            href={`mailto:${user?.email}`}
-                            className='text-base text-slate-600 dark:text-slate-50'
-                          >
-                            {user?.email}
-                          </a>
-                        </div>
-                      </li>
-                      <li className='flex space-x-3 rtl:space-x-reverse'>
-                        <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                          <Icon icon='heroicons:phone-arrow-up-right' />
-                        </div>
-                        <div className='flex-1'>
-                          <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                            PHONE
-                          </div>
-                          <a
-                            href={`tel:${user?.mobile}`}
-                            className='text-base text-slate-600 dark:text-slate-50'
-                          >
-                            {user?.mobile}
-                          </a>
-                        </div>
-                      </li>
-                      <li className='flex space-x-3 rtl:space-x-reverse'>
-                        <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                          <Icon icon='heroicons:map' />
-                        </div>
-                        <div className='flex-1'>
-                          <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                            LOCATION
-                          </div>
-                          <div className='text-base text-slate-600 dark:text-slate-50'>
-                            {details?.country}, {details?.state_city}
-                          </div>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                </Card>
-              )}
-            </Card>
+              </div>
+            )}
+          </>
+        )}
+        {details?.type === 'investor' &&
+          editingSection !== 'investor_details' && (
+            <div className='relative lg:col-span-6 col-span-12'>
+              <Card title='Investor Details'>
+                <ul className='list space-y-8'>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:briefcase' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        INVESTOR TYPE
+                      </div>
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {details.typeof}
+                      </div>
+                    </div>
+                  </li>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:credit-card' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        CHEQUE SIZE
+                      </div>
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {details.cheque_size}
+                      </div>
+                    </div>
+                  </li>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:chart-bar' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        SECTORS
+                      </div>
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {Array.isArray(details.sectors)
+                          ? details.sectors.join(', ')
+                          : details.sectors}
+                      </div>
+                    </div>
+                  </li>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:calendar' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        INVESTMENT STAGE
+                      </div>
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {details.investment_stage}
+                      </div>
+                    </div>
+                  </li>
+                  <li className='flex space-x-3 rtl:space-x-reverse'>
+                    <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
+                      <Icon icon='heroicons:document-text' />
+                    </div>
+                    <div className='flex-1'>
+                      <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                        INVESTMENT THESIS
+                      </div>
+                      <div className='text-base text-slate-600 dark:text-slate-50'>
+                        {details.investment_thesis}
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+                <Button
+                  onClick={() => setEditingSection('investor_details')}
+                  className='absolute right-4 top-16 h-8 w-auto text-white bg-[rgb(30,41,59)] rounded-md shadow-md flex items-center justify-center px-3'
+                >
+                  <Icon icon='heroicons:pencil-square' className='mr-1' /> Edit
+                </Button>
+              </Card>
+            </div>
           )}
-        </div>
-        {details?.type === 'investor' && (
-          <div className='lg:col-span-6 col-span-6'>
-            <Card title='Investor Details'>
-              <ul className='list space-y-8'>
-                <li className='flex space-x-3 rtl:space-x-reverse'>
-                  <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                    <Icon icon='heroicons:briefcase' />
+        {editingSection === 'investor_details' && (
+          <div className='relative lg:col-span-6 col-span-12'>
+            <Card title='Edit Investor Details'>
+              <form
+                onSubmit={handleSubmit((data) =>
+                  handleSave(data, 'investor_details')
+                )}
+              >
+                <div className='space-y-4'>
+                  <div className='mb-4'>
+                    <label className='block uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                      <Icon
+                        icon='heroicons:briefcase'
+                        className='inline-block mr-1 text-xl mb-2'
+                      />
+                      Investor Type
+                    </label>
+                    <Textinput
+                      name='typeof'
+                      defaultValue={details.typeof}
+                      register={register}
+                    />
                   </div>
-                  <div className='flex-1'>
-                    <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                      INVESTOR TYPE
-                    </div>
-                    <div className='text-base text-slate-600 dark:text-slate-50'>
-                      {details.typeof}
-                    </div>
+                  <div className='mb-4'>
+                    <label className='block uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                      <Icon
+                        icon='heroicons:credit-card'
+                        className='inline-block mr-1 text-xl mb-2'
+                      />
+                      Cheque Size
+                    </label>
+                    <Textinput
+                      name='cheque_size'
+                      defaultValue={details.cheque_size}
+                      register={register}
+                    />
                   </div>
-                </li>
-                <li className='flex space-x-3 rtl:space-x-reverse'>
-                  <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                    <Icon icon='heroicons:credit-card' />
+                  <div className='mb-4'>
+                    <label className='block uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                      <Icon
+                        icon='heroicons:chart-bar'
+                        className='inline-block mr-1 text-xl mb-2'
+                      />
+                      Sectors
+                    </label>
+                    <Textarea
+                      name='sectors'
+                      defaultValue={
+                        Array.isArray(details.sectors)
+                          ? details.sectors.join(', ')
+                          : details.sectors
+                      }
+                      register={register}
+                    />
                   </div>
-                  <div className='flex-1'>
-                    <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                      CHEQUE SIZE
-                    </div>
-                    <div className='text-base text-slate-600 dark:text-slate-50'>
-                      {details.cheque_size}
-                    </div>
+                  <div className='mb-4'>
+                    <label className='block uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                      <Icon
+                        icon='heroicons:calendar'
+                        className='inline-block mr-1 text-xl mb-2'
+                      />
+                      Investment Stage
+                    </label>
+                    <Textinput
+                      name='investment_stage'
+                      defaultValue={details.investment_stage}
+                      register={register}
+                    />
                   </div>
-                </li>
-                <li className='flex space-x-3 rtl:space-x-reverse'>
-                  <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                    <Icon icon='heroicons:chart-bar' />
-                  </div>
-                  <div className='flex-1'>
-                    <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                      SECTORS
-                    </div>
-                    <div className='text-base text-slate-600 dark:text-slate-50'>
-                      {Array.isArray(details.sectors)
-                        ? details.sectors.join(', ')
-                        : details.sectors}
-                    </div>
-                  </div>
-                </li>
-                <li className='flex space-x-3 rtl:space-x-reverse'>
-                  <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                    <Icon icon='heroicons:calendar' />
-                  </div>
-                  <div className='flex-1'>
-                    <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
-                      INVESTMENT STAGE
-                    </div>
-                    <div className='text-base text-slate-600 dark:text-slate-50'>
-                      {details.investment_stage}
-                    </div>
-                  </div>
-                </li>
-                <li className='flex space-x-3 rtl:space-x-reverse'>
-                  <div className='flex-none text-2xl text-slate-600 dark:text-slate-300'>
-                    <Icon icon='heroicons:document-text' />
-                  </div>
-                  <div className='flex-1'>
-                    <div className='uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                  <div className='mb-4'>
+                    <label className='block uppercase text-xs text-slate-500 dark:text-slate-300 mb-1 leading-[12px]'>
+                      <Icon
+                        icon='heroicons:document-text'
+                        className='inline-block mr-1 text-xl mb-2'
+                      />
                       INVESTMENT THESIS
-                    </div>
-                    <div className='text-base text-slate-600 dark:text-slate-50'>
-                      {details.investment_thesis}
-                    </div>
+                    </label>
+                    <Textarea
+                      name='investment_thesis'
+                      defaultValue={details.investment_thesis}
+                      register={register}
+                    />
                   </div>
-                </li>
-              </ul>
+                </div>
+                <div className='flex mt-4'>
+                  <Button text='Save' type='submit' className='btn-dark mr-4' />
+                  <Button
+                    text='Cancel'
+                    onClick={() => setEditingSection(null)}
+                    className='btn-light'
+                  />
+                </div>
+              </form>
             </Card>
           </div>
         )}
