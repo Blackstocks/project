@@ -6,6 +6,7 @@ import Icon from '@/components/ui/Icon';
 import useUserDetails from '@/hooks/useUserDetails';
 import Textinput from '@/components/ui/Textinput';
 import Textarea from '@/components/ui/Textarea';
+import Select from '@/components/ui/Select';
 import Button from '@/components/ui/Button';
 import Loading from '@/components/Loading';
 import VerticalNavTabs from '@/components/profileSideBar';
@@ -16,11 +17,11 @@ import {
   updateBusinessDetails,
   updateFundingInfo,
   updateInvestorDetails,
-  updateProfile,
+  updateProfile, // Import the new action
 } from '@/lib/actions/insertformdetails';
 
 const Profile = () => {
-  const { user, details, loading, updateDetailsLocally, updateUserLocally } =
+  const { user, details, loading, updateUserLocally, updateDetailsLocally } =
     useUserDetails();
   const [editingSection, setEditingSection] = useState(null);
   const { register, handleSubmit, reset } = useForm();
@@ -32,15 +33,8 @@ const Profile = () => {
       let result;
       switch (section) {
         case 'general_info':
-          result = await Promise.all([
-            updateProfile(user.id, { email: data.email, mobile: data.mobile }),
-            updateInvestorDetails(details.profile_id, {
-              email: data.email,
-              mobile: data.mobile,
-            }),
-          ]);
-          updateUserLocally({ email: data.email, mobile: data.mobile });
-          updateDetailsLocally({ email: data.email, mobile: data.mobile });
+          result = await updateProfile(user.id, data); // Update profiles table
+          updateUserLocally(data); // Update local state with the updated data
           break;
         case 'startup_details':
           result = await updateStartupDetails(details.profile_id, data);
@@ -55,8 +49,8 @@ const Profile = () => {
           result = await updateFundingInfo(details.id, data);
           break;
         case 'investor_details':
-          result = await updateInvestorDetails(details.profile_id, data);
-          updateDetailsLocally(data);
+          result = await updateInvestorDetails(user.id, data); // Update investor_signup table
+          updateDetailsLocally(data); // Update local state with the updated data
           break;
         default:
           console.error('Unknown section:', section);
@@ -309,8 +303,14 @@ const Profile = () => {
                       />
                       Investor Type
                     </label>
-                    <Textinput
+                    <Select
                       name='typeof'
+                      options={[
+                        { value: 'VC', label: 'VC' },
+                        { value: 'Angel Fund', label: 'Angel Fund' },
+                        { value: 'Angel Investor', label: 'Angel Investor' },
+                        { value: 'Syndicate', label: 'Syndicate' },
+                      ]}
                       defaultValue={details.typeof}
                       register={register}
                     />
@@ -355,8 +355,19 @@ const Profile = () => {
                       />
                       Investment Stage
                     </label>
-                    <Textinput
+                    <Select
                       name='investment_stage'
+                      options={[
+                        { value: 'Pre Seed', label: 'Pre Seed' },
+                        { value: 'Seed', label: 'Seed' },
+                        { value: 'Pre-Series', label: 'Pre-Series' },
+                        { value: 'Series A', label: 'Series A' },
+                        { value: 'Series B', label: 'Series B' },
+                        {
+                          value: 'Series C & Beyond',
+                          label: 'Series C & Beyond',
+                        },
+                      ]}
                       defaultValue={details.investment_stage}
                       register={register}
                     />
