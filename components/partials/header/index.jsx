@@ -97,18 +97,20 @@ const Header = ({ className = 'custom-class' }) => {
           )}
           {/* For Horizontal  */}
           {menuType === 'horizontal' && (
-            <div className='flex items-center space-x-4 rtl:space-x-reverse'>
+            <>
               <Logo />
-              {/* open mobile menu handlaer*/}
-              {width <= breakpoints.xl && (
-                <div
-                  className='cursor-pointer text-slate-900 dark:text-white text-2xl'
-                  onClick={handleOpenMobileMenu}
-                >
-                  <Icon icon='heroicons-outline:menu-alt-3' />
-                </div>
-              )}
-            </div>
+              <div className='flex items-center space-x-4 rtl:space-x-reverse'>
+                {/* open mobile menu handlaer*/}
+                {width <= breakpoints.xl && (
+                  <div
+                    className='cursor-pointer text-slate-900 dark:text-white text-2xl'
+                    onClick={handleOpenMobileMenu}
+                  >
+                    <Icon icon='heroicons-outline:menu-alt-3' />
+                  </div>
+                )}
+              </div>
+            </>
           )}
           {/*  Horizontal  Main Menu */}
           {menuType === 'horizontal' && width >= breakpoints.xl ? (
