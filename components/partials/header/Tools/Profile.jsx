@@ -79,6 +79,13 @@ const Profile = () => {
       },
     },
     {
+      label: 'Wallet',
+      icon: 'heroicons:wallet',
+      action: () => {
+        router.push('/wallet');
+      },
+    },
+    {
       label: 'Logout',
       icon: 'heroicons-outline:login',
       action: async () => {

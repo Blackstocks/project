@@ -173,7 +173,7 @@ const VerticalNavTabs = () => {
     <Card>
       <Tab.Group>
         <div className='grid grid-cols-12 lg:gap-5 md:gap-5'>
-          <div className='xl:col-span-2 lg:col-span-3 lg:gap-5 md:col-span-5 col-span-12'>
+          <div className='2xl:col-span-2 lg:col-span-3 lg:gap-5 md:col-span-5 col-span-12'>
             <Tab.List className='max-w-max'>
               {sections.map((item, i) => (
                 <Tab key={i} as={Fragment}>

@@ -22,7 +22,7 @@ const ForgotPassPage = () => {
               }}
             >
               <img
-                src='\assets\images\auth\logoblueun.png'
+                src='assets/images/logo/X (8).png'
                 alt='Logo'
                 style={{
                   height: '300px', // increased height

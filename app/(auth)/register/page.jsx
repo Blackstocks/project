@@ -5,7 +5,7 @@ import Link from "next/link";
 import useDarkMode from "@/hooks/useDarkMode";
 import RegForm from "@/components/partials/auth/reg-from";
 import Social from "@/components/partials/auth/social";
-import earth from "./earth"
+import earth from "./earth";
 
 const Register = () => {
   const [isDark] = useDarkMode();
@@ -13,7 +13,7 @@ const Register = () => {
     <>
       <div className="loginwrapper">
         <div className="lg-inner-column">
-          <div className="left-column relative z-[1]">
+          <div className="left-column relative z-[1] bg-black-50">
             <div className="max-w-[520px] pt-20 ltr:pl-20 rtl:pr-20">
               <div
                 style={{
@@ -24,30 +24,11 @@ const Register = () => {
                   height: "10vh",
                 }}
               >
-                <img
-                  src="\assets\images\auth\logoblueun.png"
-                  alt="Logo"
-                  style={{
-                    height: "300px", // increased height
-                    width: "450px", // increased width
-                    objectFit: "contain",
-                    marginTop: "15vh",
-                    marginLeft:"10vh",
-                  }}
-                />
+                
               </div>
 
               <div>
-                <img
-                  src="/assets/images/giff/giflogoun.gif"
-                  alt="GIF Logo"
-                  style={{
-                    height: "500px",
-                    width: "600px",
-                    marginLeft: "70px",
-                    marginTop: "60px",
-                  }}
-                />
+                <earth></earth>
               </div>
             </div>
           </div>
