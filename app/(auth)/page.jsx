@@ -3,8 +3,7 @@ import Link from 'next/link';
 import LoginForm from '@/components/partials/auth/login-form';
 import Social from '@/components/partials/auth/social';
 import useDarkMode from '@/hooks/useDarkMode';
-
-// image import
+import Globe from '@/components/globe'; // Import the Globe component
 
 const Login = () => {
   const [isDark] = useDarkMode();
@@ -28,7 +27,7 @@ const Login = () => {
                   alt='Logo'
                   style={{
                     height: '300px', // increased height
-                    width: '450px', // increased width
+                    width: '350px', // increased width
                     objectFit: 'contain',
                     marginTop: '25vh',
                   }}
@@ -36,16 +35,7 @@ const Login = () => {
               </div>
 
               <div>
-                <img
-                  src='/assets/images/giff/giflogoun.gif'
-                  alt='GIF Logo'
-                  style={{
-                    height: '600px',
-                    width: '600px',
-                    marginLeft: '70px',
-                    marginTop: '60px',
-                  }}
-                />
+                <Globe /> {/* Replace the GIF with the Globe component */}
               </div>
             </div>
           </div>
@@ -57,11 +47,10 @@ const Login = () => {
                     <img
                       src={
                         isDark
-                          ? '/assets/images/logo/logo-white.svg'
-                          : '/assets/images/logo/logo.svg'
+                          ? '/assets/images/logo/X (8).png'
+                          : '/assets/images/logo/X (8).png'
                       }
                       alt=''
-                      // className="mx-auto"
                       style={{
                         height: '200px',
                         width: '200px',
