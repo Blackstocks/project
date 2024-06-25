@@ -11,7 +11,7 @@ const Login = () => {
     <>
       <div className='loginwrapper'>
         <div className='lg-inner-column'>
-          <div className='left-column relative z-[1]'>
+        <div className='left-column relative z-[1]' style={{ backgroundColor: 'black' }}>
             <div className='absolute left-0 2xl:bottom-[-10px] bottom-[-10px] h-full w-full z-[-1]'>
               <div
                 style={{
@@ -23,10 +23,10 @@ const Login = () => {
                 }}
               >
                 <img
-                  src='assets/images/logo/X (8).png'
+                  src='assets/images/logo/X.gif'
                   alt='Logo'
                   style={{
-                    height: '300px', // increased height
+                    height: '100px', // increased height
                     width: '350px', // increased width
                     objectFit: 'contain',
                     marginTop: '25vh',
@@ -38,7 +38,7 @@ const Login = () => {
                 <Globe /> {/* Replace the GIF with the Globe component */}
               </div>
             </div>
-          </div>
+        </div>
           <div className='right-column relative'>
             <div className='inner-content h-full flex flex-col bg-white dark:bg-slate-800'>
               <div className='auth-box h-full flex flex-col justify-center'>

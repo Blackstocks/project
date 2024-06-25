@@ -5,7 +5,7 @@ import Link from "next/link";
 import useDarkMode from "@/hooks/useDarkMode";
 import RegForm from "@/components/partials/auth/reg-from";
 import Social from "@/components/partials/auth/social";
-import earth from "./earth";
+import Globe from '@/components/globe'; // Import the Globe component
 
 const Register = () => {
   const [isDark] = useDarkMode();
@@ -13,44 +13,34 @@ const Register = () => {
     <>
       <div className="loginwrapper">
         <div className="lg-inner-column">
-          <div className="left-column relative z-[1] bg-black-50">
-            <div className="max-w-[520px] pt-20 ltr:pl-20 rtl:pr-20">
+        <div className='left-column relative z-[1]' style={{ backgroundColor: 'black' }}>
+            <div className='absolute left-0 2xl:bottom-[-10px] bottom-[-10px] h-full w-full z-[-1]'>
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "transparent",
-                  height: "10vh",
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  backgroundColor: 'transparent',
+                  height: '10vh',
                 }}
               >
                 <img
-                  src="\assets\images\auth\logoblueun.png"
-                  alt="Logo"
+                  src='assets/images/logo/X.gif'
+                  alt='Logo'
                   style={{
-                    height: "300px", // increased height
-                    width: "450px", // increased width
-                    objectFit: "contain",
-                    marginTop: "15vh",
-                    marginLeft:"10vh",
+                    height: '300px', // increased height
+                    width: '350px', // increased width
+                    objectFit: 'contain',
+                    marginTop: '25vh',
                   }}
                 />
               </div>
 
               <div>
-                <img
-                  src="/assets/images/giff/giflogoun.gif"
-                  alt="GIF Logo"
-                  style={{
-                    height: "500px",
-                    width: "600px",
-                    marginLeft: "70px",
-                    marginTop: "60px",
-                  }}
-                />
+                <Globe /> {/* Replace the GIF with the Globe component */}
               </div>
             </div>
-          </div>
+        </div>
           <div className="right-column relative bg-white dark:bg-slate-800">
             <div className="inner-content h-full flex flex-col bg-white dark:bg-slate-800">
               <div className="auth-box h-full flex flex-col justify-center">
