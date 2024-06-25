@@ -68,7 +68,7 @@ const Ecommerce = () => {
                     <div className='flex mb-2 justify-between items-center'>
                       <h3 className='text-xs font-medium'>
                         Achieve investment readiness with our comprehensive
-                        tools for incorporation, certification, IP, and cap
+                        tools for incorporation, certification, and cap
                         table management.
                       </h3>
                     </div>
@@ -207,8 +207,8 @@ const Ecommerce = () => {
                     </div>
                     <div className='flex mb-2 justify-between items-center'>
                       <h3 className='text-xs font-medium'>
-                        Access expert legal assistance with our help desk,
-                        offering guidance on contracts, compliance, and legal
+                        Access legal assistance with our help desk,
+                        offering guidance on contracts,compliance and legal
                         documentation.
                       </h3>
                     </div>
